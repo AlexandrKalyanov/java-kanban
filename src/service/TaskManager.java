@@ -2,49 +2,57 @@ package service;
 
 import model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class TaskManager { // Класс для управление задачами: удалить, создать, посмотреть все созданнные задачи
-    private List<Task> tasks;
-    private List<Subtask> subtasks;
-    private List<Epic> epics;
-    private final Scanner scanner = new Scanner(System.in);
+public class TaskManager {
+
+    RepositoryTasks repositoryTasks = new RepositoryTasks();
     private int index;
 
     public TaskManager() {
         index = 0;
-        this.tasks = new ArrayList<>();
-        this.subtasks = new ArrayList<>();
-        this.epics = new ArrayList<>();
+
+    }
+    public void createNewTask (Task task){
+        this.index += 1;
+        repositoryTasks.addNewTask(task,index);
+    }
+    public void createNewSubtask (Subtask subtask){
+        this.index += 1;
+        repositoryTasks.addNewSubtask(subtask,index);
+    }
+    public void createNewEpic (Epic epic){
+        this.index += 1;
+        repositoryTasks.addNewEpic(epic,index);
     }
 
-
-    public Tasks createTask() {
-        System.out.println("Какой тип задачи вы хотите создать?");
-        System.out.println("Задача - 1");
-        System.out.println("Подзадача - 2");
-        System.out.println("Эпик - 3");
-        int typeOfTask = scanner.nextInt();
-        if (typeOfTask == 1){
-            System.out.println("Введите название задачи:");
-            String name = scanner.nextLine();
-            System.out.println("Введите описание:");
-            String description = scanner.nextLine();
-            String status = String.valueOf(Status.NEW);
-            this.index = index + 1;
-            return new Task(name, description, index, status);
-        }
-        System.out.println("Введите название задачи:");
-        String name = scanner.nextLine();
-        System.out.println("Введите описание:");
-        String description = scanner.nextLine();
-        String status = String.valueOf(Status.NEW);
-        this.index = index + 1;
-        return new Task(name, description, index, status);
+    public void changeStatusTask(int index,Status status){
+        repositoryTasks.getTasks().get(index).setStatus(status);
     }
 
+    public void changeStatusSubtask(int index,Status status){
+        repositoryTasks.getSubtasks().get(index).setStatus(status);
+        int indexEpic = repositoryTasks.getSubtasks().get(index).getIndexEpic();
+        Status epicStatus = repositoryTasks.getEpics().get(indexEpic).getStatus();
+        // TODO: Необходимо реализоваь смену статуса у Эпика
+    }
 
+    public Map<Integer,Task> getAllTasks(){
+        Map<Integer,Task> allTasks = new HashMap<>();
+        allTasks.putAll(repositoryTasks.getEpics());
+        allTasks.putAll( repositoryTasks.getSubtasks());
+        allTasks.putAll(repositoryTasks.getTasks());
+        return allTasks;
+    }
 
+    public Map<Integer,Task> getTasks(){
+        return repositoryTasks.getTasks();
+    }
+    public Map<Integer,Subtask> getSubtasks(){
+        return repositoryTasks.getSubtasks();
+    }
+    public Map<Integer,Epic> getEpics(){
+        return repositoryTasks.getEpics();
+    }
 }
+
