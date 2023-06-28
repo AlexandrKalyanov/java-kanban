@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RepositoryTasks {
-    private Map<Integer,Task> tasks;
-    private Map<Integer,Subtask> subtasks;
-    private Map<Integer,Epic> epics;
+    private Map<Integer, Task> tasks;
+    private Map<Integer, Subtask> subtasks;
+    private Map<Integer, Epic> epics;
 
     public RepositoryTasks() {
         this.tasks = new HashMap<>();
@@ -14,17 +14,19 @@ public class RepositoryTasks {
         this.epics = new HashMap<>();
     }
 
-    public void addNewTask(Task task,int index){
+    public void addNewTask(Task task, int index) {
         task.setId(index);
-        tasks.put(index,task);
+        tasks.put(index, task);
     }
-    public void addNewSubtask(Subtask subtask,int index){
+
+    public void addNewSubtask(Subtask subtask, int index) {
         subtask.setId(index);
-        subtasks.put(index,subtask);
+        subtasks.put(index, subtask);
     }
-    public void addNewEpic(Epic epic,int index){
+
+    public void addNewEpic(Epic epic, int index) {
         epic.setId(index);
-        epics.put(index,epic);
+        epics.put(index, epic);
     }
 
     @Override

@@ -2,7 +2,7 @@ package model;
 
 import model.Status;
 
-public class Task{
+public class Task {
     private String name;
     private String description;
     private int id;
