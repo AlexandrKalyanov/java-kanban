@@ -54,8 +54,14 @@ public class Epic extends Task {
         return subtasks;
     }
 
-    public void setSubtasks(Map<Integer, Subtask> subtasks) {
-        this.subtasks = subtasks;
+    public void addSubtasks(int index, Subtask subtask) {
+        this.subtasks.put(index,subtask);
+    }
+    public void addSubtasks(Map<Integer,Subtask> subtask) {
+        this.subtasks.putAll(subtask);
+    }
+    public void removeSubtask() {
+        this.subtasks.clear();
     }
 }
 

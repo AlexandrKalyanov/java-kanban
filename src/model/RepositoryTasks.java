@@ -22,6 +22,8 @@ public class RepositoryTasks {
     public void addNewSubtask(Subtask subtask, int index) {
         subtask.setId(index);
         subtasks.put(index, subtask);
+        //todo доабить сабтаску в епик
+
     }
 
     public void addNewEpic(Epic epic, int index) {
@@ -48,5 +50,14 @@ public class RepositoryTasks {
 
     public Map<Integer, Epic> getEpics() {
         return epics;
+    }
+    public void deleteSubtask(int index){
+        this.subtasks.remove(index);
+    }
+    public void deleteTask(int index){
+        this.tasks.remove(index);
+    }
+    public void deleteEpic(int index){
+        this.epics.remove(index);
     }
 }
