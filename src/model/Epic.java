@@ -1,29 +1,19 @@
 package model;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Epic extends Task {
-    private Map<Integer, Subtask> subtasks;
-
+    private final List<Integer> subtasks;
 
     public Epic(String name, String description) {
         super(name, description);
-        this.subtasks = new HashMap<>();
-
+        this.subtasks = new ArrayList<>();
     }
 
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
-    @Override
-    public String getDescription() {
-        return super.getDescription();
-    }
 
     @Override
     public String toString() {
@@ -35,32 +25,20 @@ public class Epic extends Task {
                 '}';
     }
 
-    @Override
-    public int getId() {
-        return super.getId();
-    }
-
-    @Override
-    public Status getStatus() {
-        return super.getStatus();
-    }
-
-    @Override
-    public void setId(int id) {
-        super.setId(id);
-    }
-
-    public Map<Integer, Subtask> getSubtasks() {
+    public List<Integer> getSubtasks() {
         return subtasks;
     }
 
-    public void addSubtasks(int index, Subtask subtask) {
-        this.subtasks.put(index,subtask);
+    public void addSubtask(int index) {
+        this.subtasks.add(index);
     }
-    public void addSubtasks(Map<Integer,Subtask> subtask) {
-        this.subtasks.putAll(subtask);
+    public void addSubtasks(List<Integer> subtasks) {
+        this.subtasks.addAll(subtasks);
     }
-    public void removeSubtask() {
+    public void removeOneSubtusk(int index){
+        this.subtasks.remove(index);
+    }
+    public void removeSubtasks() {
         this.subtasks.clear();
     }
 }

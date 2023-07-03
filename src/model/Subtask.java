@@ -1,48 +1,18 @@
 package model;
 
 public class Subtask extends Task {
-    int indexEpic;
+    private final int indexEpic;
 
-    public Subtask(String name, String description, int indexEpic) {
-        super(name, description);
+    public Subtask(String name, String description, Status status, int indexEpic) {
+        super(name, description, status);
         this.indexEpic = indexEpic;
     }
 
-
-    @Override
-    public String getName() {
-        return super.getName();
+    public Subtask(String name, String description, Status status, int id, int indexEpic) {
+        super(name, description, status, id);
+        this.indexEpic = indexEpic;
     }
 
-    @Override
-    public void setName(String name) {
-        super.setName(name);
-    }
-
-    @Override
-    public String getDescription() {
-        return super.getDescription();
-    }
-
-    @Override
-    public void setDescription(String description) {
-        super.setDescription(description);
-    }
-
-    @Override
-    public int getId() {
-        return super.getId();
-    }
-
-    @Override
-    public Status getStatus() {
-        return super.getStatus();
-    }
-
-    @Override
-    public void setStatus(Status status) {
-        super.setStatus(status);
-    }
 
     @Override
     public String toString() {
