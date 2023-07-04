@@ -2,9 +2,7 @@ package model;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Epic extends Task {
     private final List<Integer> subtasks;
@@ -35,11 +33,9 @@ public class Epic extends Task {
     public void addSubtasks(List<Integer> subtasks) {
         this.subtasks.addAll(subtasks);
     }
-    public void removeOneSubtusk(int index){
+    public void removeOneSubtask(int index){
         this.subtasks.remove(index);
     }
-    public void removeSubtasks() {
-        this.subtasks.clear();
-    }
+
 }
 

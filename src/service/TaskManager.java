@@ -130,18 +130,15 @@ public class TaskManager {
     }
 
     public List<Task> getTasks() {
-        List<Task> allTasks = new ArrayList<>(this.tasksStorage.values());
-        return allTasks;
+        return new ArrayList<>(this.tasksStorage.values());
     }
 
     public List<Subtask> getSubtasks() {
-        List<Subtask> allSubtasks = new ArrayList<>(this.subtasksStorage.values());
-        return allSubtasks;
+        return new ArrayList<>(this.subtasksStorage.values());
     }
 
     public List<Epic> getEpics() {
-        List<Epic> allEpics = new ArrayList<>(this.epicsStorage.values());
-        return allEpics;
+        return new ArrayList<>(this.epicsStorage.values());
     }
 
     public Task getTaskById(int index) {
@@ -158,7 +155,7 @@ public class TaskManager {
 
     public void updateSubtask(Subtask subtask) {
        subtasksStorage.put(subtask.getId(),subtask);
-        // TODO: change Epic status
+        // TODO: change epic status
     }
 
     public void updateEpic(Epic epic) {
@@ -171,14 +168,17 @@ public class TaskManager {
 
     public void deleteSubtask(int index){
         int indexEpic = this.subtasksStorage.get(index).getIndexEpic();
-        this.epicsStorage.get(indexEpic).removeOneSubtusk(index);
+        this.epicsStorage.get(indexEpic).removeOneSubtask(index);
         this.subtasksStorage.remove(index);
+        //todo change epic status
     }
     public void deleteTask(int index){
         this.tasksStorage.remove(index);
     }
     public void deleteEpic(int index){
+        subtasksStorage.values().removeIf(subtask -> subtask.getIndexEpic() == index);
         this.epicsStorage.remove(index);
+
     }
 }
 

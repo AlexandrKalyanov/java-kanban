@@ -1,6 +1,5 @@
 package model;
 
-import model.Status;
 
 public class Task {
     private String name;

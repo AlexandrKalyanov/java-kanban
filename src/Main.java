@@ -14,13 +14,11 @@ public class Main {
         System.out.println(taskManager.getTaskById(1));
         taskManager.changeStatusSubtask(2,Status.IN_PROGRESS);
         System.out.println(taskManager.getTaskById(1));
+        taskManager.createNewTask(new Task("task","task1",Status.NEW));
+        taskManager.removeAllSubtask();
+        System.out.println(taskManager.getTaskById(1));
 
-        System.out.println(taskManager.getAllSubtaskByEpic(1));
-        taskManager.changeStatusSubtask(2, Status.DONE);
-        System.out.println(taskManager.getTaskById(1));
-        taskManager.changeStatusSubtask(3, Status.DONE);
-        System.out.println(taskManager.getTaskById(1));
-//
+
 
     }
 }
