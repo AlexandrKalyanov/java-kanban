@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private final List<Integer> subtasks;
+    private final List<Integer> subtasksIds;
 
     public Epic(String name, String description) {
         super(name, description);
-        this.subtasks = new ArrayList<>();
+        this.subtasksIds = new ArrayList<>();
     }
 
 
@@ -23,18 +23,19 @@ public class Epic extends Task {
                 '}';
     }
 
-    public List<Integer> getSubtasks() {
-        return subtasks;
+    public List<Integer> getSubtasksIds() {
+        return subtasksIds;
     }
 
     public void addSubtask(int index) {
-        this.subtasks.add(index);
+        this.subtasksIds.add(index);
     }
     public void addSubtasks(List<Integer> subtasks) {
-        this.subtasks.addAll(subtasks);
+        this.subtasksIds.addAll(subtasks);
     }
-    public void removeOneSubtask(int index){
-        this.subtasks.remove(index);
+    public void removeOneSubtask(int id){
+        int index = subtasksIds.indexOf(id);
+        this.subtasksIds.remove(index);
     }
 
 }

@@ -47,14 +47,15 @@ public class TaskManager {
     }
 
     public void createNewTask(Task task) {
-        this.tasksStorage.put(generateID(),task);
+        this.tasksStorage.put(generateID(), task);
         task.setId(this.index);
     }
 
     public void createNewSubtask(Subtask subtask) {
-        this.subtasksStorage.put(generateID(),subtask);
+        this.subtasksStorage.put(generateID(), subtask);
         subtask.setId(this.index);
         this.epicsStorage.get(subtask.getIndexEpic()).addSubtask(this.index);
+        checkOrChangeEpicStatus(subtask.getIndexEpic());
     }
 
     public void createNewEpic(Epic epic) {
@@ -65,34 +66,40 @@ public class TaskManager {
     }
 
 
-
     public void changeStatusTask(int index, Status status) {
         this.tasksStorage.get(index).setStatus(status);
     }
 
+    //todo
+    private void checkOrChangeEpicStatus(int indexEpic) {
+        List<Integer> subtasksIds = epicsStorage.get(indexEpic).getSubtasksIds();
+        int countSubtasks = subtasksIds.size();
+        int doneCount = 0;
+        int newCount = 0;
+        for (int subtasksId : subtasksIds) {
+            switch (subtasksStorage.get(subtasksId).getStatus()) {
+                case NEW:
+                    newCount++;
+                    break;
+                case DONE:
+                    doneCount++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (doneCount == countSubtasks) {
+            epicsStorage.get(indexEpic).setStatus(Status.DONE);
+        } else if (newCount == countSubtasks) {
+            epicsStorage.get(indexEpic).setStatus(Status.NEW);
+
+        } else epicsStorage.get(indexEpic).setStatus(Status.IN_PROGRESS);
+
+    }
 
     public void changeStatusSubtask(int index, Status status) {
         subtasksStorage.get(index).setStatus(status);
-        int indexEpic = subtasksStorage.get(index).getIndexEpic();
-        Status epicStatus = epicsStorage.get(indexEpic).getStatus();
-        List<Subtask> subtasksByEpic = getAllSubtaskByEpic(indexEpic);
-        Epic epic = epicsStorage.get(indexEpic);
-
-        if (status == Status.IN_PROGRESS) {
-
-            epic.setStatus(Status.IN_PROGRESS);
-        } else if (status == Status.DONE) {
-            boolean hasUncloseTask = false;
-            for (Subtask subtask : subtasksByEpic) {
-                if (subtask.getStatus() != Status.DONE) {
-                    hasUncloseTask = true;
-                    break;
-                }
-            }
-            if (!hasUncloseTask) {
-                epic.setStatus(Status.DONE);
-            }
-        }
+        checkOrChangeEpicStatus(subtasksStorage.get(index).getIndexEpic());
     }
 
     public List<Task> getAllTasks() {
@@ -109,7 +116,7 @@ public class TaskManager {
 
     public void removeAllSubtask() {
         this.subtasksStorage.clear();
-        for (Epic epic : epicsStorage.values()){
+        for (Epic epic : epicsStorage.values()) {
             epic.setStatus(Status.NEW);
         }
 
@@ -122,8 +129,8 @@ public class TaskManager {
 
     public List<Subtask> getAllSubtaskByEpic(int epicIndex) {
         List<Subtask> allSubtasksByEpic = new ArrayList<>();
-        List<Integer> subtasksByEpic = this.epicsStorage.get(epicIndex).getSubtasks();
-        for (int subtasks: subtasksByEpic){
+        List<Integer> subtasksByEpic = this.epicsStorage.get(epicIndex).getSubtasksIds();
+        for (int subtasks : subtasksByEpic) {
             allSubtasksByEpic.add(this.subtasksStorage.get(subtasks));
         }
         return allSubtasksByEpic;
@@ -150,32 +157,35 @@ public class TaskManager {
     }
 
     public void updateTask(Task task) {
-        tasksStorage.put(task.getId(),task);
+        tasksStorage.put(task.getId(), task);
     }
 
     public void updateSubtask(Subtask subtask) {
-       subtasksStorage.put(subtask.getId(),subtask);
-        // TODO: change epic status
+        subtasksStorage.put(subtask.getId(), subtask);
+        checkOrChangeEpicStatus(subtask.getIndexEpic());
+
     }
 
     public void updateEpic(Epic epic) {
-        List<Integer> subtasksByEpic = epicsStorage.get(epic.getId()).getSubtasks();
-        epicsStorage.put(epic.getId(),epic);
+        List<Integer> subtasksByEpic = epicsStorage.get(epic.getId()).getSubtasksIds();
+        epicsStorage.put(epic.getId(), epic);
         epicsStorage.get(epic.getId()).addSubtasks(subtasksByEpic);
     }
 
 
-
-    public void deleteSubtask(int index){
+    public void deleteSubtask(int index) {
         int indexEpic = this.subtasksStorage.get(index).getIndexEpic();
         this.epicsStorage.get(indexEpic).removeOneSubtask(index);
         this.subtasksStorage.remove(index);
-        //todo change epic status
+        checkOrChangeEpicStatus(indexEpic);
+
     }
-    public void deleteTask(int index){
+
+    public void deleteTask(int index) {
         this.tasksStorage.remove(index);
     }
-    public void deleteEpic(int index){
+
+    public void deleteEpic(int index) {
         subtasksStorage.values().removeIf(subtask -> subtask.getIndexEpic() == index);
         this.epicsStorage.remove(index);
 
