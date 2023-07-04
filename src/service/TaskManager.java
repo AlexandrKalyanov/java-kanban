@@ -71,29 +71,29 @@ public class TaskManager {
     }
 
 
-//    public void changeStatusSubtask(int index, Status status) {
-//        repositoryTasks.getSubtasks().get(index).setStatus(status);
-//        int indexEpic = repositoryTasks.getSubtasks().get(index).getIndexEpic();
-//        Status epicStatus = repositoryTasks.getEpics().get(indexEpic).getStatus();
-//        List<Integer> subtasksByEpic = getAllSubtaskByEpic(indexEpic);
-//        Epic epic = (Epic) getTaskById(indexEpic);
-//
-//        if (status == Status.IN_PROGRESS) {
-//
-//            epic.setStatus(Status.IN_PROGRESS);
-//        } else if (status == Status.DONE) {
-//            boolean hasUncloseTask = false;
-//            for (Subtask subtask : subtasksByEpic.values()) {
-//                if (subtask.getStatus() != Status.DONE) {
-//                    hasUncloseTask = true;
-//                    break;
-//                }
-//            }
-//            if (!hasUncloseTask) {
-//                epic.setStatus(Status.DONE);
-//            }
-//        }
-//    }
+    public void changeStatusSubtask(int index, Status status) {
+        subtasksStorage.get(index).setStatus(status);
+        int indexEpic = subtasksStorage.get(index).getIndexEpic();
+        Status epicStatus = epicsStorage.get(indexEpic).getStatus();
+        List<Subtask> subtasksByEpic = getAllSubtaskByEpic(indexEpic);
+        Epic epic = epicsStorage.get(indexEpic);
+
+        if (status == Status.IN_PROGRESS) {
+
+            epic.setStatus(Status.IN_PROGRESS);
+        } else if (status == Status.DONE) {
+            boolean hasUncloseTask = false;
+            for (Subtask subtask : subtasksByEpic) {
+                if (subtask.getStatus() != Status.DONE) {
+                    hasUncloseTask = true;
+                    break;
+                }
+            }
+            if (!hasUncloseTask) {
+                epic.setStatus(Status.DONE);
+            }
+        }
+    }
 
     public List<Task> getAllTasks() {
         List<Task> allTasks = new ArrayList<>();
