@@ -5,62 +5,34 @@ import model.*;
 import java.util.*;
 
 public class TaskManager {
-    private Map<Integer, Task> getTasksStorage() {
-        return tasksStorage;
-    }
-
-    private void setTasksStorage(Map<Integer, Task> tasksStorage) {
-        this.tasksStorage = tasksStorage;
-    }
-
-    private Map<Integer, Subtask> getSubtasksStorage() {
-        return subtasksStorage;
-    }
-
-    private void setSubtasksStorage(Map<Integer, Subtask> subtasksStorage) {
-        this.subtasksStorage = subtasksStorage;
-    }
-
-    private Map<Integer, Epic> getEpicsStorage() {
-        return epicsStorage;
-    }
-
-    private void setEpicsStorage(Map<Integer, Epic> epicsStorage) {
-        this.epicsStorage = epicsStorage;
-    }
-
-    private Map<Integer, Task> tasksStorage;
-    private Map<Integer, Subtask> subtasksStorage;
-    private Map<Integer, Epic> epicsStorage;
-
+    private final Map<Integer, Task> tasksStorage;
+    private final Map<Integer, Subtask> subtasksStorage;
+    private final Map<Integer, Epic> epicsStorage;
     private int index;
 
     public TaskManager() {
         this.tasksStorage = new HashMap<>();
         this.subtasksStorage = new HashMap<>();
         this.epicsStorage = new HashMap<>();
-        index = 0;
     }
 
-    private int generateID() {
-        return ++index;
-    }
 
     public void createNewTask(Task task) {
-        this.tasksStorage.put(generateID(), task);
-        task.setId(this.index);
+        task.setId(generateID());
+        this.tasksStorage.put(this.index, task);
+
     }
 
     public void createNewSubtask(Subtask subtask) {
-        this.subtasksStorage.put(generateID(), subtask);
-        subtask.setId(this.index);
+        subtask.setId(generateID());
+        this.subtasksStorage.put(this.index, subtask);
         this.epicsStorage.get(subtask.getIndexEpic()).addSubtask(this.index);
         checkOrChangeEpicStatus(subtask.getIndexEpic());
     }
 
     public void createNewEpic(Epic epic) {
-        this.epicsStorage.put(generateID(), epic);
-        epic.setId(index);
+        epic.setId(generateID());
+        this.epicsStorage.put(index, epic);
         epic.setStatus(Status.NEW);
 
     }
@@ -69,34 +41,8 @@ public class TaskManager {
     public void changeStatusTask(int index, Status status) {
         this.tasksStorage.get(index).setStatus(status);
     }
-
-    //todo
-    private void checkOrChangeEpicStatus(int indexEpic) {
-        List<Integer> subtasksIds = epicsStorage.get(indexEpic).getSubtasksIds();
-        int countSubtasks = subtasksIds.size();
-        int doneCount = 0;
-        int newCount = 0;
-        for (int subtasksId : subtasksIds) {
-            switch (subtasksStorage.get(subtasksId).getStatus()) {
-                case NEW:
-                    newCount++;
-                    break;
-                case DONE:
-                    doneCount++;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (doneCount == countSubtasks) {
-            epicsStorage.get(indexEpic).setStatus(Status.DONE);
-        } else if (newCount == countSubtasks) {
-            epicsStorage.get(indexEpic).setStatus(Status.NEW);
-
-        } else epicsStorage.get(indexEpic).setStatus(Status.IN_PROGRESS);
-
-    }
-
+    //Данного метода не должно существовать, весь расчет статусов эпиков производиться автоматически, при изменении подзадачи @Алексей Чеузов
+    // Данный метод для смены статуса Сабтаски, а не для епика, считаю замечание не корректным
     public void changeStatusSubtask(int index, Status status) {
         subtasksStorage.get(index).setStatus(status);
         checkOrChangeEpicStatus(subtasksStorage.get(index).getIndexEpic());
@@ -118,6 +64,10 @@ public class TaskManager {
         this.subtasksStorage.clear();
         for (Epic epic : epicsStorage.values()) {
             epic.setStatus(Status.NEW);
+        }
+        // удаление сабтаск у епика
+        for (Epic epic: epicsStorage.values()){
+            epic.getSubtasksIds().clear();
         }
 
     }
@@ -167,9 +117,9 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) {
-        List<Integer> subtasksByEpic = epicsStorage.get(epic.getId()).getSubtasksIds();
-        epicsStorage.put(epic.getId(), epic);
-        epicsStorage.get(epic.getId()).addSubtasks(subtasksByEpic);
+        final Epic savedEpic = epicsStorage.get(epic.getId());
+        savedEpic.setName(epic.getName());
+        savedEpic.setDescription(epic.getDescription());
     }
 
 
@@ -188,6 +138,34 @@ public class TaskManager {
     public void deleteEpic(int index) {
         subtasksStorage.values().removeIf(subtask -> subtask.getIndexEpic() == index);
         this.epicsStorage.remove(index);
+
+    }
+    private int generateID() {
+        return ++index;
+    }
+    private void checkOrChangeEpicStatus(int indexEpic) {
+        List<Integer> subtasksIds = epicsStorage.get(indexEpic).getSubtasksIds();
+        int countSubtasks = subtasksIds.size();
+        int doneCount = 0;
+        int newCount = 0;
+        for (int subtasksId : subtasksIds) {
+            switch (subtasksStorage.get(subtasksId).getStatus()) {
+                case NEW:
+                    newCount++;
+                    break;
+                case DONE:
+                    doneCount++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (doneCount == countSubtasks) {
+            epicsStorage.get(indexEpic).setStatus(Status.DONE);
+        } else if (newCount == countSubtasks) {
+            epicsStorage.get(indexEpic).setStatus(Status.NEW);
+
+        } else epicsStorage.get(indexEpic).setStatus(Status.IN_PROGRESS);
 
     }
 }

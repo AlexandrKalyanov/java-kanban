@@ -25,6 +25,10 @@ public class Main {
         taskManager.updateTask(new Task("name", "test", Status.IN_PROGRESS, 5));
         taskManager.updateSubtask(new Subtask("SubTask_new", "descr", Status.IN_PROGRESS, 2, 1));
         System.out.println(taskManager.getTaskById(1));
+        taskManager.updateEpic(new Epic("Epic_NEW","descr Epic_NEW",1));
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getAllTasks());
+        taskManager.removeAllSubtask();
         System.out.println(taskManager.getAllTasks());
 
     }

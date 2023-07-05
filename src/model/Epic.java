@@ -12,6 +12,11 @@ public class Epic extends Task {
         this.subtasksIds = new ArrayList<>();
     }
 
+    public Epic(String name, String description, int id) {
+        super(name, description, id);
+        this.subtasksIds = new ArrayList<>();
+    }
+
 
     @Override
     public String toString() {
@@ -20,6 +25,7 @@ public class Epic extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
                 ", status='" + getStatus() + '\'' +
+                ", subtasksIds='" + getSubtasksIds() + '\'' +
                 '}';
     }
 
