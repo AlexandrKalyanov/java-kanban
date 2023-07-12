@@ -2,12 +2,13 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
+import service.InMemoryTaskManager;
 import service.TaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = new InMemoryTaskManager();
         taskManager.createNewEpic(new Epic("epic", "desc Epic"));
         taskManager.createNewSubtask(new Subtask("subtask", "descr subtask", Status.NEW, 1));
         taskManager.createNewSubtask(new Subtask("subtask2", "descr subtask2", Status.NEW, 1));
