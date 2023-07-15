@@ -7,9 +7,9 @@ import java.util.*;
 public interface TaskManager {
     void createNewTask(Task task);
 
-   void createNewSubtask(Subtask subtask);
+    void createNewSubtask(Subtask subtask);
 
-   void createNewEpic(Epic epic);
+    void createNewEpic(Epic epic);
 
 
     void changeStatusTask(int index, Status status);
@@ -23,6 +23,7 @@ public interface TaskManager {
     void removeAllSubtask();
 
     void removeAllEpic();
+
     List<Subtask> getAllSubtaskByEpic(int epicIndex);
 
     List<Task> getTasks();
@@ -32,6 +33,12 @@ public interface TaskManager {
     List<Epic> getEpics();
 
     Task getTaskById(int index);
+
+    Task getTask(int index);
+
+    Subtask getSubtask(int index);
+
+    Epic getEpic(int index);
 
     void updateTask(Task task);
 
@@ -47,6 +54,8 @@ public interface TaskManager {
 
 
     void deleteEpic(int index);
+    HistoryManager getHistoryManager();
+
 
 }
 
