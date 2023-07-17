@@ -1,8 +1,15 @@
 package service;
 
-public interface Managers {
-    TaskManager getDefault();
+public final class Managers {
 
-    HistoryManager getDefaultHistory();
+    private Managers() {}
 
+
+    public static TaskManager getDefault() {
+        return new InMemoryTaskManager();
+    }
+
+    public static HistoryManager getHistoryDefault() {
+        return new InMemoryHistoryManager();
+    }
 }

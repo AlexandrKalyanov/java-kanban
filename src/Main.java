@@ -6,9 +6,8 @@ import service.*;
 public class Main {
 
     public static void main(String[] args) {
-        ChoosingManager choosingManager = new ChoosingManager();
-        TaskManager taskManager = choosingManager.getDefault();
-        HistoryManager inMemoryHistoryManager = taskManager.getHistoryManager();
+        TaskManager taskManager = new InMemoryTaskManager();
+
         taskManager.createNewEpic(new Epic("epic", "desc Epic"));
         taskManager.createNewSubtask(new Subtask("subtask", "descr subtask", Status.NEW, 1));
         taskManager.createNewSubtask(new Subtask("subtask2", "descr subtask2", Status.NEW, 1));
@@ -22,8 +21,8 @@ public class Main {
         taskManager.getEpic(1);
         taskManager.getEpic(1);
         taskManager.getEpic(1);
-        System.out.println(inMemoryHistoryManager.getHistory());
-        System.out.println(inMemoryHistoryManager.getHistory().size());
+        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getHistory().size());
 
     }
 }

@@ -5,10 +5,7 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasksStorage;
@@ -17,14 +14,14 @@ public class InMemoryTaskManager implements TaskManager {
     private int index;
 
 
-    HistoryManager historyManager;
+    private final HistoryManager historyManager;
 
 
     public InMemoryTaskManager() {
         this.tasksStorage = new HashMap<>();
         this.subtasksStorage = new HashMap<>();
         this.epicsStorage = new HashMap<>();
-        this.historyManager = new InMemoryHistoryManager();
+        this.historyManager = Managers.getHistoryDefault();
 
     }
 
@@ -56,8 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.tasksStorage.get(index).setStatus(status);
     }
 
-    //Данного метода не должно существовать, весь расчет статусов эпиков производиться автоматически, при изменении подзадачи @Алексей Чеузов
-    // Данный метод для смены статуса Сабтаски, а не для епика, считаю замечание не корректным
+
     public void changeStatusSubtask(int index, Status status) {
         subtasksStorage.get(index).setStatus(status);
         checkOrChangeEpicStatus(subtasksStorage.get(index).getIndexEpic());
@@ -128,7 +124,6 @@ public class InMemoryTaskManager implements TaskManager {
         allTasks.putAll(subtasksStorage);
         allTasks.putAll(tasksStorage);
         historyManager.add(allTasks.get(index));
-        //history.add(allTasks.get(index));
         return allTasks.get(index);
     }
 
@@ -175,15 +170,14 @@ public class InMemoryTaskManager implements TaskManager {
         savedEpic.setDescription(epic.getDescription());
     }
 
-    public HistoryManager getHistoryManager() {
-        return historyManager;
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     @Override
     public void deleteSubtask(int index) {
-        int indexEpic = this.subtasksStorage.get(index).getIndexEpic();
+        int indexEpic = this.subtasksStorage.remove(index).getIndexEpic();
         this.epicsStorage.get(indexEpic).removeOneSubtask(index);
-        this.subtasksStorage.remove(index);
         checkOrChangeEpicStatus(indexEpic);
 
     }
