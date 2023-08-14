@@ -179,18 +179,26 @@ public class InMemoryTaskManager implements TaskManager {
         int indexEpic = this.subtasksStorage.remove(index).getIndexEpic();
         this.epicsStorage.get(indexEpic).removeOneSubtask(index);
         checkOrChangeEpicStatus(indexEpic);
+        historyManager.remove(index);
 
     }
 
     @Override
     public void deleteTask(int index) {
         this.tasksStorage.remove(index);
+        historyManager.remove(index);
     }
 
     @Override
     public void deleteEpic(int index) {
-        subtasksStorage.values().removeIf(subtask -> subtask.getIndexEpic() == index);
-        this.epicsStorage.remove(index);
+        for (Subtask value : subtasksStorage.values()) {
+            if (value.getIndexEpic() == index) {
+                historyManager.remove(value.getId());
+                subtasksStorage.remove(value.getId());
+            }
+        }
+        historyManager.remove(index);
+        epicsStorage.remove(index);
 
     }
 
