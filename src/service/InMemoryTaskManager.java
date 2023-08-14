@@ -75,7 +75,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllSubtask() {
+        subtasksStorage.forEach((integer, subtask) -> historyManager.remove(subtask.getId()));
         this.subtasksStorage.clear();
+
         for (Epic epic : epicsStorage.values()) {
             epic.setStatus(Status.NEW);
         }
@@ -88,6 +90,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpic() {
+        epicsStorage.forEach((integer, epic) -> historyManager.remove(epic.getId()));
+        for (Map.Entry<Integer, Epic> entry: epicsStorage.entrySet()){
+            List<Integer> subtasks = entry.getValue().getSubtasksIds();
+            for (Integer subtask : subtasks) {
+                historyManager.remove(subtask);
+            }
+        }
         this.epicsStorage.clear();
         this.subtasksStorage.clear();
     }
