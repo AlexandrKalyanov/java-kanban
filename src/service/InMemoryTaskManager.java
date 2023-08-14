@@ -70,6 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTask() {
+        tasksStorage.forEach(((integer, task) -> historyManager.remove(task.getId())));
         this.tasksStorage.clear();
     }
 
