@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllEpic() {
         epicsStorage.forEach((integer, epic) -> historyManager.remove(epic.getId()));
-        for (Map.Entry<Integer, Epic> entry: epicsStorage.entrySet()){
+        for (Map.Entry<Integer, Epic> entry : epicsStorage.entrySet()) {
             List<Integer> subtasks = entry.getValue().getSubtasksIds();
             for (Integer subtask : subtasks) {
                 historyManager.remove(subtask);
@@ -139,26 +139,36 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int index) {
-        if (tasksStorage.containsKey(index)) {
-            historyManager.add(tasksStorage.get(index));
+        Task task = tasksStorage.get(index);
+        if (task != null) {
+            historyManager.add(task);
+            return task;
+        } else {
+            return null;
         }
-        return tasksStorage.get(index);
     }
 
     @Override
     public Subtask getSubtask(int index) {
-        if (subtasksStorage.containsKey(index)) {
-            historyManager.add(subtasksStorage.get(index));
+        Subtask subtask = subtasksStorage.get(index);
+        if (subtask != null) {
+            historyManager.add(subtask);
+            return subtask;
+        } else {
+            return null;
         }
-        return subtasksStorage.get(index);
+
     }
 
     @Override
     public Epic getEpic(int index) {
-        if (epicsStorage.containsKey(index)) {
-            historyManager.add(epicsStorage.get(index));
+        Epic epic = epicsStorage.get(index);
+        if (epic != null) {
+            historyManager.add(epic);
+            return epic;
+        } else {
+            return null;
         }
-        return epicsStorage.get(index);
     }
 
     @Override
@@ -186,10 +196,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubtask(int index) {
-        int indexEpic = this.subtasksStorage.remove(index).getIndexEpic();
+        historyManager.remove(index);
+        int indexEpic = this.subtasksStorage.get(index).getIndexEpic();
+        subtasksStorage.remove(index);
         this.epicsStorage.get(indexEpic).removeOneSubtask(index);
         checkOrChangeEpicStatus(indexEpic);
-        historyManager.remove(index);
+
 
     }
 
@@ -201,15 +213,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpic(int index) {
+        ArrayList<Integer> subtasksForRemove = new ArrayList<>();
         for (Subtask value : subtasksStorage.values()) {
             if (value.getIndexEpic() == index) {
-                historyManager.remove(value.getId());
-                subtasksStorage.remove(value.getId());
+                subtasksForRemove.add(value.getId());
             }
+        }
+        for (Integer id : subtasksForRemove) {
+            subtasksStorage.remove(id);
+            historyManager.remove(id);
         }
         historyManager.remove(index);
         epicsStorage.remove(index);
-
     }
 
     private int generateID() {

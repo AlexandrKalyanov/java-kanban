@@ -8,7 +8,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node first;
     private Node last;
 
-    Map<Integer, Node> map = new HashMap<>();
+    private final Map<Integer, Node> map = new HashMap<>();
+
 
     @Override
     public List<Task> getHistory() {
@@ -28,6 +29,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
+        if (map.containsKey(task.getId())) {
+            remove(task.getId());
+        }
         if (task == null) {
             return;
         }
@@ -36,40 +40,35 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (last != null) {
             last.next = node;
             node.prev = last;
-            last = node;
-            map.put(task.getId(), node);
+
         } else {
             first = node;
-            last = node;
-            map.put(task.getId(), node);
+
         }
+        last = node;
+        map.put(task.getId(), node);
     }
 
     @Override
     public void remove(int id) {
-        Node current = map.remove(id);
-
+        Node current = map.remove(id);;
         if (current == last && current == first) {
             last = null;
             first = null;
         } else if (current == last) {
-            current.prev.next = null;
             last = current.prev;
-            current.next = null;
-            current.prev = null;
         } else if (current == first) {
-            current.next.prev = null;
             first = current.next;
-            current.next = null;
-            current.prev = null;
         } else {
             current.prev.next = current.next;
             current.next.prev = current.prev;
         }
+
     }
 
 
-    public static class Node {
+
+    private static class Node {
 
         private Task value;
         private Node next;
