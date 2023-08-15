@@ -51,7 +51,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node current = map.remove(id);;
+        Node current = map.remove(id);
+        ;
         if (current == last && current == first) {
             last = null;
             first = null;
@@ -65,7 +66,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
     }
-
 
 
     private static class Node {

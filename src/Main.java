@@ -37,10 +37,5 @@ public class Main {
         System.out.println(taskManager.getHistory().size());
 
 
-
-
-
-
-
     }
 }

@@ -36,10 +36,12 @@ public class Epic extends Task {
     public void addSubtask(int index) {
         this.subtasksIds.add(index);
     }
+
     public void addSubtasks(List<Integer> subtasks) {
         this.subtasksIds.addAll(subtasks);
     }
-    public void removeOneSubtask(int id){
+
+    public void removeOneSubtask(int id) {
         int index = subtasksIds.indexOf(id);
         this.subtasksIds.remove(index);
     }
