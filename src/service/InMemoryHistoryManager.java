@@ -15,7 +15,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         List<Task> result = new ArrayList<>();
         if (first == null) {
-            System.out.println("List is empty");
             return result;
         }
         Node current = first;
@@ -52,7 +51,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         Node current = map.remove(id);
-        ;
         if (current == last && current == first) {
             last = null;
             first = null;

@@ -5,6 +5,7 @@ public class Task {
     private String name;
     private String description;
     private int id;
+    private TypeTask typeTask;
 
     private Status status;
 
@@ -12,25 +13,29 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+        this.typeTask = TypeTask.TASK;
     }
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description, Status status,TypeTask typeTask) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.typeTask = typeTask;
     }
 
-    public Task(String name, String description, Status status, int id) {
+    public Task(String name, String description, Status status, int id,TypeTask typeTask) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.id = id;
+        this.typeTask = typeTask;
     }
 
-    public Task(String name, String description, int id) {
+    public Task(String name, String description, int id,TypeTask typeTask) {
         this.name = name;
         this.description = description;
         this.id = id;
+        this.typeTask = typeTask;
     }
 
 
@@ -75,5 +80,13 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TypeTask getTypeTask() {
+        return typeTask;
+    }
+
+    public void setTypeTask(TypeTask typeTask) {
+        this.typeTask = typeTask;
     }
 }

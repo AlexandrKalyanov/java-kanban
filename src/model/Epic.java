@@ -7,14 +7,16 @@ import java.util.List;
 public class Epic extends Task {
     private final List<Integer> subtasksIds;
 
-    public Epic(String name, String description) {
+    public Epic(String name, String description, TypeTask typeTask) {
         super(name, description);
         this.subtasksIds = new ArrayList<>();
+        setTypeTask(typeTask);
     }
 
-    public Epic(String name, String description, int id) {
-        super(name, description, id);
+    public Epic(String name, String description, int id, TypeTask typeTask) {
+        super(name, description, id, typeTask);
         this.subtasksIds = new ArrayList<>();
+
     }
 
 
@@ -35,10 +37,6 @@ public class Epic extends Task {
 
     public void addSubtask(int index) {
         this.subtasksIds.add(index);
-    }
-
-    public void addSubtasks(List<Integer> subtasks) {
-        this.subtasksIds.addAll(subtasks);
     }
 
     public void removeOneSubtask(int id) {

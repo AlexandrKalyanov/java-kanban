@@ -12,8 +12,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Subtask> subtasksStorage;
     private final Map<Integer, Epic> epicsStorage;
     private int index;
-
-
     private final HistoryManager historyManager;
 
 
@@ -24,6 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = Managers.getHistoryDefault();
 
     }
+
 
     @Override
     public void createNewTask(Task task) {
@@ -255,6 +254,22 @@ public class InMemoryTaskManager implements TaskManager {
 
         } else epicsStorage.get(indexEpic).setStatus(Status.IN_PROGRESS);
 
+    }
+
+    public Map<Integer, Task> getTasksStorage() {
+        return tasksStorage;
+    }
+
+    public Map<Integer, Subtask> getSubtasksStorage() {
+        return subtasksStorage;
+    }
+
+    public Map<Integer, Epic> getEpicsStorage() {
+        return epicsStorage;
+    }
+
+    public HistoryManager getHistoryManager() {
+        return historyManager;
     }
 }
 
