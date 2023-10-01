@@ -1,4 +1,4 @@
-package Files;
+package files;
 
 import model.*;
 import service.HistoryManager;
