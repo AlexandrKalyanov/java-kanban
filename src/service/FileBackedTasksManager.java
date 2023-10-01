@@ -1,15 +1,11 @@
 package service;
 
-import Files.CSVFormatHandler;
+import files.CSVFormatHandler;
 
 import model.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,29 +16,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private static final CSVFormatHandler handler = new CSVFormatHandler();
 
     public FileBackedTasksManager() {
-        super();
         this.file = new File("file.csv");
     }
+
     public static void main(String[] args) {
         FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager();
-        backedTasksManager.loadFromFile(backedTasksManager.getFile());
-        backedTasksManager.createNewTask(new Task("Задача №1", "Описание задачи №1",Status.NEW,TypeTask.TASK));
-        backedTasksManager.createNewTask(new Task("Задача №2", "Описание задачи №2",Status.NEW,TypeTask.TASK));
-        backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1",TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr",Status.NEW,3,TypeTask.SUBTASK));
-        backedTasksManager.createNewSubtask(new Subtask("SubTask2", "Priverka2", Status.NEW,3,TypeTask.SUBTASK));
-        backedTasksManager.createNewEpic(new Epic("Эпик №2", "Описание эпика №2",TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("SubTask3", "Priverka3", Status.NEW,3,TypeTask.SUBTASK));
+        backedTasksManager.createNewTask(new Task("Задача №1", "Описание задачи №1", Status.NEW, TypeTask.TASK));
+        backedTasksManager.createNewTask(new Task("Задача №2", "Описание задачи №2", Status.NEW, TypeTask.TASK));
+        backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1", TypeTask.EPIC));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager.createNewSubtask(new Subtask("SubTask2", "Proverka2", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager.createNewEpic(new Epic("Эпик №2", "Описание эпика №2", TypeTask.EPIC));
+        backedTasksManager.createNewSubtask(new Subtask("SubTask3", "Proverka3", Status.NEW, 3, TypeTask.SUBTASK));
         backedTasksManager.getTask(1);
         backedTasksManager.getTask(1);
         backedTasksManager.getTask(2);
         backedTasksManager.getEpic(3);
         System.out.println(backedTasksManager.getHistory());
-
+        FileBackedTasksManager backedTasksManager1 = loadFromFile();
+        System.out.println(backedTasksManager1.getAllTasks());
+        System.out.println(backedTasksManager1.getHistory());
+        backedTasksManager1.createNewSubtask(new Subtask("SubTask4", "Proverka4", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager1.getSubtask(8);
 
 
     }
-    public void save() {
+
+    private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.file.getName()))) {
 
             writer.write(handler.getHeader());
@@ -71,62 +71,79 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
 
     }
-    public void loadFromFile(File file) {
-        String content = readFileContents(file.getName());
-        String[] lines = content.split("\r?\n");
-        if (lines[1] != null) {     // Проверка на пустой файл
-            for (int i = 1; i < (lines.length - 2); i++) {
-                String[] parts = lines[i].split(",");
+
+    static FileBackedTasksManager loadFromFile() {
+        FileBackedTasksManager manager = new FileBackedTasksManager();
+        ArrayList<String> lines = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("file.csv"));
+            String content = reader.readLine();
+            while (reader.ready()) {
+                lines.add(content);
+                content = reader.readLine();
+            }
+            reader.close();
+            lines.add(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            int maxId = 0;
+            for (int i = 1; i < (lines.size() - 2); i++) {
+                String[] parts = lines.get(i).split(",");
                 if (parts[1].equals("TASK")) {
-                    Task task = handler.taskFromString(lines[i]);
-                    getTasksStorage().put(task.getId(), task);
+                    Task task = handler.taskFromString(lines.get(i));
+                    manager.getTasksStorage().put(task.getId(), task);
+                    if (maxId < task.getId()) {
+                        maxId = task.getId();
+                    }
                 }
                 if (parts[1].equals("EPIC")) {
-                    Epic epic = handler.epicFromString(lines[i]);
-                    getEpicsStorage().put(epic.getId(), epic);
+                    Epic epic = handler.epicFromString(lines.get(i));
+                    manager.getEpicsStorage().put(epic.getId(), epic);
+                    if (maxId < epic.getId()) {
+                        maxId = epic.getId();
+                    }
                 }
                 if (parts[1].equals("SUBTASK")) {
-                    Subtask subTask = handler.subTaskFromString(lines[i]);
+                    Subtask subTask = handler.subTaskFromString(lines.get(i));
                     int ide = subTask.getIndexEpic();
-                    getSubtasksStorage().put(subTask.getId(), subTask);
-                    if (getEpicsStorage().containsKey(ide)) {
-                        Epic epic = getEpicsStorage().get(ide);
+                    manager.getSubtasksStorage().put(subTask.getId(), subTask);
+                    if (manager.getEpicsStorage().containsKey(ide)) {
+                        Epic epic = manager.getEpicsStorage().get(ide);
                         epic.addSubtask(subTask.getId());
+                        if (maxId < epic.getId()) {
+                            maxId = epic.getId();
+                        }
                     } else {
                         System.out.println("Файл повреждён! Не возможно найти Эпик!");
                         break;
                     }
                 }
             }
-            String[] ids = lines[lines.length-1].split(",");
-            for (int j = 0; j < ids.length; j++) {
-                if (getTasksStorage().containsKey(j)) {
-                    getHistoryManager().add(getTasksStorage().get(j));
-                }
-                if (getEpicsStorage().containsKey(j)) {
-                    getHistoryManager().add(getEpicsStorage().get(j));
-                }
-                if (getSubtasksStorage().containsKey(j)) {
-                    getHistoryManager().add(getSubtasksStorage().get(j));
+            manager.setIndex(maxId + 1);
+            int lineWithHistory = lines.size() - 1;
+            String[] ids = lines.get(lineWithHistory).split(",");
+            boolean checkHistory = lines.get(lineWithHistory).isEmpty();
+            if (!checkHistory) {
+                for (String id : ids) {
+                    if (manager.getTasksStorage().containsKey(Integer.parseInt(id))) {
+                        manager.getHistoryManager().add(manager.getTasksStorage().get(Integer.parseInt(id)));
+                    }
+                    if (manager.getEpicsStorage().containsKey(Integer.parseInt(id))) {
+                        manager.getHistoryManager().add(manager.getEpicsStorage().get(Integer.parseInt(id)));
+                    }
+                    if (manager.getSubtasksStorage().containsKey(Integer.parseInt(id))) {
+                        manager.getHistoryManager().add(manager.getSubtasksStorage().get(Integer.parseInt(id)));
+                    }
                 }
             }
-
-
-        } else {
-            System.out.println("Файл пуст!");
+            return manager;
+        } catch (IndexOutOfBoundsException | NullPointerException e) {
+            return manager;
         }
     }
-    public String readFileContents(String file) {
-        try {
-            return Files.readString(Path.of(file));
-        } catch (IOException e) {
-            System.out.println("Невозможно прочитать файл с месячным отчётом. Возможно файл не находится в нужной директории.");
-            return null;
-        }
-    }
-    public File getFile() {
-        return file;
-    }
+
     @Override
     public void createNewTask(Task task) {
         super.createNewTask(task);
@@ -265,6 +282,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public void deleteTask(int index) {
         super.deleteTask(index);
+        save();
     }
 
     @Override
