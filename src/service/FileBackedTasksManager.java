@@ -33,7 +33,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         backedTasksManager.getTask(2);
         backedTasksManager.getEpic(3);
         System.out.println(backedTasksManager.getHistory());
-        FileBackedTasksManager backedTasksManager1 = loadFromFile();
+        FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile();
         System.out.println(backedTasksManager1.getAllTasks());
         System.out.println(backedTasksManager1.getHistory());
         backedTasksManager1.createNewSubtask(new Subtask("SubTask4", "Proverka4", Status.NEW, 3, TypeTask.SUBTASK));
@@ -72,7 +72,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    static FileBackedTasksManager loadFromFile() {
+    public FileBackedTasksManager loadFromFile() {
         FileBackedTasksManager manager = new FileBackedTasksManager();
         ArrayList<String> lines = new ArrayList<>();
         try {
