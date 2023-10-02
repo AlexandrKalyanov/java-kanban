@@ -5,6 +5,7 @@ id,type,name,status,description,epic
 6,EPIC,Эпик №2,NEW,Описание эпика №2,
 4,SUBTASK,Subtask 1,NEW,descr,3
 5,SUBTASK,SubTask2,NEW,Proverka2,3
+7,SUBTASK,SubTask3,NEW,Proverka3,3
 8,SUBTASK,SubTask4,NEW,Proverka4,3
 
-8
+1,2,3,8
