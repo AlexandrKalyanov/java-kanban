@@ -3,21 +3,23 @@ package files;
 import model.*;
 import service.HistoryManager;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CSVFormatHandler {
 
     private static final String DELIMITER = ",";
-
     public String toString(Task task) {
         String result = task.getId() + DELIMITER +
                 task.getTypeTask() + DELIMITER +
                 task.getName() + DELIMITER +
                 task.getStatus() + DELIMITER +
-                task.getDescription() + DELIMITER;
+                task.getDescription() + DELIMITER +
+                task.getStartTime() + DELIMITER +
+                task.getDuration() + DELIMITER;
         if (task.getTypeTask() == TypeTask.SUBTASK) {
-            result = result + ((Subtask) task).getIndexEpic();
+            result += ((Subtask) task).getIndexEpic();
         }
         return result;
     }
@@ -25,25 +27,26 @@ public class CSVFormatHandler {
     public Task taskFromString(String value) {
         String[] parts = value.split(",");
         String id = String.valueOf(Integer.parseInt(parts[0]));
-        String taskType = parts[1];
         String name = parts[2];
         String status = parts[3];
         String description = parts[4];
-
-        Task task = new Task(name, description, Status.valueOf(status), TypeTask.valueOf(taskType));
+        String startTime = parts[5];
+        String duration = parts[6];
+        Task task = new Task(name,description,Status.valueOf(status),Integer.parseInt(id),Instant.parse(startTime),Long.parseLong(duration));
         task.setId(Integer.parseInt(id));
         return task;
     }
-
+     //todo
     public Epic epicFromString(String value) {
         String[] parts = value.split(",");
         String id = String.valueOf(Integer.parseInt(parts[0]));
+        String typeTask = parts[1];
         String name = parts[2];
         String status = parts[3];
         String description = parts[4];
-
-
-        Epic epic = new Epic(name, description, Integer.parseInt(id), TypeTask.EPIC);
+        String startTime = parts[5];
+        String duration = parts[6];
+        Epic epic = new Epic(name,description,TypeTask.valueOf(typeTask),Integer.parseInt(id),Instant.parse(startTime),Long.parseLong(duration),Instant.parse(startTime).plusSeconds(Long.parseLong(duration)*60));
         epic.setStatus(Status.valueOf(status));
         return epic;
     }
@@ -54,11 +57,10 @@ public class CSVFormatHandler {
         String name = parts[2];
         String status = parts[3];
         String description = parts[4];
-        String epicId = parts[5];
-
-        Subtask subTask = new Subtask(name, description, Status.valueOf(status), Integer.parseInt(id), Integer.parseInt(epicId), TypeTask.SUBTASK);
-        subTask.setStatus(Status.valueOf(status));
-        return subTask;
+        String startTime = parts[5];
+        String duration = parts[6];
+        String epicId = parts[7];
+        return new Subtask(Integer.parseInt(id),name,Status.valueOf(status),description,Instant.parse(startTime),Long.parseLong(duration),Integer.parseInt(epicId));
     }
 
     public String historyToString(HistoryManager manager) {
@@ -72,6 +74,6 @@ public class CSVFormatHandler {
 
 
     public String getHeader() {
-        return "id,type,name,status,description,epic";
+        return "id,type,name,status,description,startTime,duration,epic";
     }
 }

@@ -1,43 +1,46 @@
 package model;
 
 
+import java.time.Instant;
+
 public class Task {
-    private String name;
-    private String description;
-    private int id;
-    private TypeTask typeTask;
+    protected String name;
+    protected String description;
+    protected int id;
+    protected TypeTask typeTask;
+    protected Status status;
+    protected Instant startTime;
+    protected long duration;
 
-    private Status status;
 
+    public Task(String name,
+                String description,
+                Instant startTime,
+                long duration) {
 
-    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.typeTask = TypeTask.TASK;
-    }
+        this.status = Status.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
 
-    public Task(String name, String description, Status status,TypeTask typeTask) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
-        this.typeTask = typeTask;
     }
+    public Task(String name,
+                String description,
+                Status status,
+                int id,
+                Instant startTime,
+                long duration) {
 
-    public Task(String name, String description, Status status, int id,TypeTask typeTask) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.id = id;
-        this.typeTask = typeTask;
+        this.typeTask = TypeTask.TASK;
+        this.startTime = startTime;
+        this.duration = duration;
     }
-
-    public Task(String name, String description, int id,TypeTask typeTask) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.typeTask = typeTask;
-    }
-
 
     public String getName() {
         return name;
@@ -59,7 +62,6 @@ public class Task {
         return id;
     }
 
-
     public Status getStatus() {
         return status;
     }
@@ -67,17 +69,6 @@ public class Task {
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
-                '}';
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -86,7 +77,35 @@ public class Task {
         return typeTask;
     }
 
-    public void setTypeTask(TypeTask typeTask) {
-        this.typeTask = typeTask;
+    public Instant getStartTime() {
+        return startTime;
+    }
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+    public Instant getEndTime(){
+        return this.startTime.plusSeconds(duration * 60);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", typeTask=" + typeTask +
+                ", status=" + status +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + getEndTime() +
+                '}';
     }
 }

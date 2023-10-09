@@ -1,19 +1,36 @@
 package model;
 
+import java.time.Instant;
+
 public class Subtask extends Task {
     private final int indexEpic;
 
-    public Subtask(String name, String description, Status status, int indexEpic,TypeTask typeTask) {
-        super(name, description, status,typeTask);
+    public Subtask(String name,
+                   String description,
+                   Instant startTime,
+                   long duration,
+                   int indexEpic) {
+
+        super(name, description, startTime, duration);
+        this.typeTask = TypeTask.SUBTASK;
         this.indexEpic = indexEpic;
-        setTypeTask(typeTask);
 
     }
 
-    public Subtask(String name, String description, Status status, int id, int indexEpic,TypeTask typeTask) {
-        super(name, description, status, id,typeTask);
+    public Subtask(int id,
+                   String name,
+                   Status status,
+                   String description,
+                   Instant startTime,
+                   long duration,
+                   int indexEpic) {
+
+        super(name, description, startTime, duration);
+        this.typeTask = TypeTask.SUBTASK;
+        this.status = status;
         this.indexEpic = indexEpic;
-        setTypeTask(typeTask);
+        this.id = id;
+
     }
 
 

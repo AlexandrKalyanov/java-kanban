@@ -1,11 +1,10 @@
-id,type,name,status,description,epic
-1,TASK,Задача №1,NEW,Описание задачи №1,
-2,TASK,Задача №2,NEW,Описание задачи №2,
-3,EPIC,Эпик 1,NEW,Описание эпика 1,
-6,EPIC,Эпик №2,NEW,Описание эпика №2,
-4,SUBTASK,Subtask 1,NEW,descr,3
-5,SUBTASK,SubTask2,NEW,Proverka2,3
-7,SUBTASK,SubTask3,NEW,Proverka3,3
-8,SUBTASK,SubTask4,NEW,Proverka4,3
+id,type,name,status,description,startTime,duration,epic
+1,TASK,Задача №1,NEW,desc,2023-10-09T14:55:59.733020Z,60,
+2,TASK,Задача № 2,NEW,Описание задачи №2,2023-10-09T14:55:59.879178Z,30,
+3,EPIC,Эпик 1,NEW,Описание эпика 1,2023-10-09T14:55:59.880029Z,60,
+6,EPIC,Эпик №2,NEW,Описание эпика №2,1970-01-01T00:00:00Z,0,
+4,SUBTASK,Subtask 1,NEW,descr 1,2023-10-09T14:55:59.880029Z,60,3
+5,SUBTASK,Subtask 2,NEW,descr 2,2023-10-09T14:55:59.901938Z,60,3
+7,SUBTASK,Subtask 3,NEW,descr 3,2023-10-09T14:55:59.902648Z,60,3
 
-1,2,3,8
+1,2,3

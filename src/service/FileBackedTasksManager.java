@@ -5,6 +5,7 @@ import files.CSVFormatHandler;
 import model.*;
 
 import java.io.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +22,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager();
-        backedTasksManager.createNewTask(new Task("Задача №1", "Описание задачи №1", Status.NEW, TypeTask.TASK));
-        backedTasksManager.createNewTask(new Task("Задача №2", "Описание задачи №2", Status.NEW, TypeTask.TASK));
+        backedTasksManager.createNewTask(new Task("Задача №1","desc",Instant.now(),60));
+        backedTasksManager.createNewTask(new Task("Задача № 2","Описание задачи №2",Instant.now(),30));
         backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr", Status.NEW, 3, TypeTask.SUBTASK));
-        backedTasksManager.createNewSubtask(new Subtask("SubTask2", "Proverka2", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr 1",Instant.now(),60,3));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 2", "descr 2",Instant.now(),60,3));
         backedTasksManager.createNewEpic(new Epic("Эпик №2", "Описание эпика №2", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("SubTask3", "Proverka3", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 3", "descr 3",Instant.now(),60,3));
         backedTasksManager.getTask(1);
         backedTasksManager.getTask(1);
         backedTasksManager.getTask(2);
@@ -36,7 +37,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile();
         System.out.println(backedTasksManager1.getAllTasks());
         System.out.println(backedTasksManager1.getHistory());
-        backedTasksManager1.createNewSubtask(new Subtask("SubTask4", "Proverka4", Status.NEW, 3, TypeTask.SUBTASK));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 4", "descr 3",Instant.now(),60,3));
         backedTasksManager1.getSubtask(8);
 
 

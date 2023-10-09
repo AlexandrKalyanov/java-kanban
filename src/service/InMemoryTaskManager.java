@@ -5,6 +5,8 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -233,6 +235,8 @@ public class InMemoryTaskManager implements TaskManager {
     private void checkOrChangeEpicStatus(int indexEpic) {
         List<Integer> subtasksIds = epicsStorage.get(indexEpic).getSubtasksIds();
         int countSubtasks = subtasksIds.size();
+        Instant startTime = subtasksStorage.get(subtasksIds.get(0)).getStartTime();
+        Instant endTime = subtasksStorage.get(subtasksIds.get(0)).getEndTime();;
         int doneCount = 0;
         int newCount = 0;
         for (int subtasksId : subtasksIds) {
@@ -246,6 +250,12 @@ public class InMemoryTaskManager implements TaskManager {
                 default:
                     break;
             }
+            if (subtasksStorage.get(subtasksId).getStartTime().isBefore(startTime))
+                startTime = subtasksStorage.get(subtasksId).getStartTime();
+
+            if (subtasksStorage.get(subtasksId).getEndTime().isAfter(endTime))
+                endTime = subtasksStorage.get(subtasksId).getEndTime();
+
         }
         if (doneCount == countSubtasks) {
             epicsStorage.get(indexEpic).setStatus(Status.DONE);
@@ -253,6 +263,9 @@ public class InMemoryTaskManager implements TaskManager {
             epicsStorage.get(indexEpic).setStatus(Status.NEW);
 
         } else epicsStorage.get(indexEpic).setStatus(Status.IN_PROGRESS);
+        epicsStorage.get(indexEpic).setStartTime(startTime);
+        epicsStorage.get(indexEpic).setEndTime(endTime);
+        epicsStorage.get(indexEpic).setDuration(Duration.between(startTime,endTime).toMinutes());
 
     }
 
