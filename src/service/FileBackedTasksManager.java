@@ -11,8 +11,6 @@ import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-
-
     private final File file;
     private static final CSVFormatHandler handler = new CSVFormatHandler();
 
