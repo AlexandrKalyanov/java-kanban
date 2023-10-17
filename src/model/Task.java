@@ -97,15 +97,15 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", typeTask=" + typeTask +
-                ", status=" + status +
-                ", startTime=" + startTime +
-                ", duration=" + duration +
-                ", endTime=" + getEndTime() +
-                '}';
+        return String.format("Task %d: %s, %s. (%s) \n " +
+                        "Начать: %s \n " +
+                        "Время на выполнение: %s \n " +
+                        "Закончить: %s", id,
+                name,
+                description,
+                status,
+                startTime,
+                duration,
+                getEndTime());
     }
 }

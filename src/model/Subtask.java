@@ -36,12 +36,13 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", status='" + getStatus() + '\'' +
-                '}';
+        return String.format("SubTask %d(epicId: %d): %s, %s, %s \n " +
+                        "Начать: %s \n " + "Время на выполнение: %s \n " +
+                        "Закончить: %s ", id,
+                indexEpic, name,
+                description, status,
+                startTime, duration,
+                getEndTime());
     }
 
 

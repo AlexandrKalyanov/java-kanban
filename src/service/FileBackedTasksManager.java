@@ -6,8 +6,7 @@ import model.*;
 
 import java.io.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -20,23 +19,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager();
-        backedTasksManager.createNewTask(new Task("Задача №1","desc",Instant.now(),60));
-        backedTasksManager.createNewTask(new Task("Задача № 2","Описание задачи №2",Instant.now(),30));
+        backedTasksManager.createNewTask(new Task("Задача №1","desc",Instant.ofEpochSecond(1111111117L),60));
+        backedTasksManager.createNewTask(new Task("Задача № 2","Описание задачи №2",Instant.ofEpochSecond(1111111116L),30));
         backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr 1",Instant.now(),60,3));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 2", "descr 2",Instant.now(),60,3));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr 1",Instant.ofEpochSecond(1111111115L),60,3));
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 2", "descr 2",Instant.ofEpochSecond(1111111114L),60,3));
         backedTasksManager.createNewEpic(new Epic("Эпик №2", "Описание эпика №2", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 3", "descr 3",Instant.now(),60,3));
-        backedTasksManager.getTask(1);
+        backedTasksManager.createNewSubtask(new Subtask("Subtask 3", "descr 3",Instant.ofEpochSecond(1111111113L),60,6));
+        backedTasksManager.getTask(-1);
+        backedTasksManager.getTask(10);
         backedTasksManager.getTask(1);
         backedTasksManager.getTask(2);
         backedTasksManager.getEpic(3);
-        System.out.println(backedTasksManager.getHistory());
+
         FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile();
-        System.out.println(backedTasksManager1.getAllTasks());
-        System.out.println(backedTasksManager1.getHistory());
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 4", "descr 3",Instant.now(),60,3));
-        backedTasksManager1.getSubtask(8);
+        System.out.println(backedTasksManager1.getPrioritizedTasks());
+        System.out.println(backedTasksManager1.getPrioritizedTasks().size());
+       // System.out.println(backedTasksManager1.getHistory());
+        //backedTasksManager1.createNewSubtask(new Subtask("Subtask 4", "descr 3",Instant.now(),60,3));
+       // backedTasksManager1.getSubtask(8);
 
 
     }
@@ -144,21 +145,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) {
+    public Task createNewTask(Task task) {
         super.createNewTask(task);
         save();
+        return task;
     }
 
     @Override
-    public void createNewSubtask(Subtask subtask) {
+    public Subtask createNewSubtask(Subtask subtask) {
         super.createNewSubtask(subtask);
         save();
+        return subtask;
     }
 
     @Override
-    public void createNewEpic(Epic epic) {
+    public Epic createNewEpic(Epic epic) {
         super.createNewEpic(epic);
         save();
+        return epic;
     }
 
     @Override
@@ -174,8 +178,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        List<Task> tasks = super.getAllTasks();
+    public List<Task> getPrioritizedTasks() {
+        List<Task> tasks = super.getPrioritizedTasks();
+        tasks.sort(Comparator.comparing(Task::getStartTime));
         save();
         return tasks;
     }

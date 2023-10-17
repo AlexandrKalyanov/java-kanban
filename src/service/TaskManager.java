@@ -5,18 +5,18 @@ import model.*;
 import java.util.*;
 
 public interface TaskManager {
-    void createNewTask(Task task);
+    Task createNewTask(Task task);
 
-    void createNewSubtask(Subtask subtask);
+    Subtask createNewSubtask(Subtask subtask);
 
-    void createNewEpic(Epic epic);
+    Epic createNewEpic(Epic epic);
 
 
     void changeStatusTask(int index, Status status);
 
     void changeStatusSubtask(int index, Status status);
 
-    List<Task> getAllTasks();
+    List<Task> getPrioritizedTasks();
 
     void removeAllTask();
 
@@ -56,6 +56,7 @@ public interface TaskManager {
     void deleteEpic(int index);
 
     List<Task> getHistory();
+    void setEpicTime(int indexEpic);
 
 
 }
