@@ -1,10 +1,2 @@
 id,type,name,status,description,startTime,duration,epic
-1,TASK,Задача №1,NEW,desc,2005-03-18T01:58:37Z,60,
-2,TASK,Задача № 2,NEW,Описание задачи №2,2005-03-18T01:58:36Z,30,
-3,EPIC,Эпик 1,NEW,Описание эпика 1,2005-03-18T01:58:34Z,60,
-6,EPIC,Эпик №2,NEW,Описание эпика №2,2005-03-18T01:58:33Z,60,
-4,SUBTASK,Subtask 1,NEW,descr 1,2005-03-18T01:58:35Z,60,3
-5,SUBTASK,Subtask 2,NEW,descr 2,2005-03-18T01:58:34Z,60,3
-7,SUBTASK,Subtask 3,NEW,descr 3,2005-03-18T01:58:33Z,60,6
 
-1,2,3
