@@ -16,9 +16,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public FileBackedTasksManager() {
         this.file = new File("file.csv");
     }
+    public FileBackedTasksManager(File file) {
+        this.file = file;
+    }
 
     public static void main(String[] args) {
-        FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager();
+        FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager(new File("file.csv"));
         backedTasksManager.createNewTask(new Task("Задача №1","desc",Instant.ofEpochSecond(1111111117L),60));
         backedTasksManager.createNewTask(new Task("Задача № 2","Описание задачи №2",Instant.ofEpochSecond(1111111116L),30));
         backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1", TypeTask.EPIC));
@@ -32,12 +35,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         backedTasksManager.getTask(2);
         backedTasksManager.getEpic(3);
 
-        FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile();
+        FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile(new File("file.csv"));
         System.out.println(backedTasksManager1.getPrioritizedTasks());
         System.out.println(backedTasksManager1.getPrioritizedTasks().size());
-       // System.out.println(backedTasksManager1.getHistory());
-        //backedTasksManager1.createNewSubtask(new Subtask("Subtask 4", "descr 3",Instant.now(),60,3));
-       // backedTasksManager1.getSubtask(8);
+        System.out.println(backedTasksManager1.getHistory());
+        backedTasksManager1.createNewSubtask(new Subtask("Subtask 4", "descr 3",Instant.now(),60,3));
+        backedTasksManager1.getSubtask(8);
 
 
     }
@@ -64,7 +67,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
             writer.newLine();
-            writer.write(handler.historyToString(getHistoryManager()));
+            if (handler.historyToString(getHistoryManager()).isEmpty()){
+                writer.newLine();
+            } else
+                writer.write(handler.historyToString(getHistoryManager()));
 
         } catch (IOException exception) {
             throw new IllegalArgumentException("Невозможно прочитать файл!");
@@ -72,11 +78,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    public FileBackedTasksManager loadFromFile() {
-        FileBackedTasksManager manager = new FileBackedTasksManager();
+    public FileBackedTasksManager loadFromFile(File file) {
+        FileBackedTasksManager manager = new FileBackedTasksManager(file);
         ArrayList<String> lines = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("file.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             String content = reader.readLine();
             while (reader.ready()) {
                 lines.add(content);

@@ -5,26 +5,26 @@ import model.*;
 import java.util.*;
 
 public interface TaskManager {
-    Task createNewTask(Task task); //done
+    Task createNewTask(Task task);
 
-    Subtask createNewSubtask(Subtask subtask); //done
+    Subtask createNewSubtask(Subtask subtask);
 
-    Epic createNewEpic(Epic epic); //done
+    Epic createNewEpic(Epic epic);
 
 
-    void changeStatusTask(int index, Status status); //done
+    void changeStatusTask(int index, Status status);
 
-    void changeStatusSubtask(int index, Status status); //done
+    void changeStatusSubtask(int index, Status status);
 
-    List<Task> getPrioritizedTasks(); //done
+    List<Task> getPrioritizedTasks();
 
-    void removeAllTask(); //done
+    void removeAllTask();
 
-    void removeAllSubtask(); //done
+    void removeAllSubtask();
 
-    void removeAllEpic(); //done
+    void removeAllEpic();
 
-    List<Subtask> getAllSubtaskByEpic(int epicIndex); //done
+    List<Subtask> getAllSubtaskByEpic(int epicIndex);
 
     List<Task> getTasks();
 
@@ -34,23 +34,23 @@ public interface TaskManager {
 
     Task getTaskById(int index);
 
-    Task getTask(int index); //done
+    Task getTask(int index);
 
-    Subtask getSubtask(int index); //done
+    Subtask getSubtask(int index);
 
-    Epic getEpic(int index); //done
+    Epic getEpic(int index);
 
-    void updateTask(Task task); //done
+    void updateTask(Task task);
 
-    void updateSubtask(Subtask subtask);//done
+    void updateSubtask(Subtask subtask);
 
-    void updateEpic(Epic epic);//done
-
-
-    void deleteSubtask(int index);//done
+    void updateEpic(Epic epic);
 
 
-    void deleteTask(int index);//done
+    void deleteSubtask(int index);
+
+
+    void deleteTask(int index);
 
 
     void deleteEpic(int index);
