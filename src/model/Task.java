@@ -44,7 +44,7 @@ public class Task {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -52,7 +52,7 @@ public class Task {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -60,11 +60,11 @@ public class Task {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Status status) {
@@ -75,14 +75,14 @@ public class Task {
     }
 
     public TypeTask getTypeTask() {
-        return typeTask;
+        return this.typeTask;
     }
 
     public Instant getStartTime() {
-        return startTime;
+        return this.startTime;
     }
     public long getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setStartTime(Instant startTime) {
@@ -93,7 +93,7 @@ public class Task {
         this.duration = duration;
     }
     public Instant getEndTime(){
-        return this.startTime.plusSeconds(duration * 60);
+        return this.startTime.plusSeconds(this.duration * 60);
     }
 
     @Override
@@ -101,12 +101,12 @@ public class Task {
         return String.format("Task %d: %s, %s. (%s) \n " +
                         "Начать: %s \n " +
                         "Время на выполнение: %s \n " +
-                        "Закончить: %s", id,
-                name,
-                description,
-                status,
-                startTime,
-                duration,
+                        "Закончить: %s", this.id,
+                this.name,
+                this.description,
+                this.status,
+                this.startTime,
+                this.duration,
                 getEndTime());
     }
 
@@ -115,11 +115,11 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && duration == task.duration && Objects.equals(name, task.name) && Objects.equals(description, task.description) && typeTask == task.typeTask && status == task.status && Objects.equals(startTime, task.startTime);
+        return this.id == task.id && this.duration == task.duration && Objects.equals(this.name, task.name) && Objects.equals(this.description, task.description) && this.typeTask == task.typeTask && this.status == task.status && Objects.equals(this.startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, id, typeTask, status, startTime, duration);
+        return Objects.hash(this.name, this.description, this.id, this.typeTask, this.status, this.startTime, this.duration);
     }
 }

@@ -1,7 +1,6 @@
 package model;
 
 
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +10,7 @@ public class Epic extends Task {
     private final List<Integer> subtasksIds;
     private Instant endTime = Instant.ofEpochSecond(0);
 
-    public Epic(String name,
-                String description,
-                TypeTask taskType) {
-
+    public Epic(String name, String description, TypeTask taskType) {
         super(name, description, Instant.ofEpochSecond(0), 0);
         this.subtasksIds = new ArrayList<>();
         this.typeTask = taskType;
@@ -40,18 +36,18 @@ public class Epic extends Task {
                         "Начать: %s \n " +
                         "Время на выполнение: %s \n " +
                         "Закончить: %s",
-                id,
-                name,
-                description,
-                status,
-                startTime,
-                duration,
-                endTime);
+                this.id,
+                this.name,
+                this.description,
+                this.status,
+                this.startTime,
+                this.duration,
+                this.endTime);
     }
 
 
     public List<Integer> getSubtasksIds() {
-        return subtasksIds;
+        return this.subtasksIds;
     }
 
     public void addSubtask(int index) {
@@ -59,13 +55,13 @@ public class Epic extends Task {
     }
 
     public void removeOneSubtask(int id) {
-        int index = subtasksIds.indexOf(id);
+        int index = this.subtasksIds.indexOf(id);
         this.subtasksIds.remove(index);
     }
 
-   @Override
+    @Override
     public Instant getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(Instant endTime) {

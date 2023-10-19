@@ -38,15 +38,15 @@ public class Subtask extends Task {
     public String toString() {
         return String.format("SubTask %d(epicId: %d): %s, %s, %s \n " +
                         "Начать: %s \n " + "Время на выполнение: %s \n " +
-                        "Закончить: %s ", id,
-                indexEpic, name,
-                description, status,
-                startTime, duration,
+                        "Закончить: %s ", this.id,
+                this.indexEpic, this.name,
+                this.description, this.status,
+                this.startTime, this.duration,
                 getEndTime());
     }
 
 
     public int getIndexEpic() {
-        return indexEpic;
+        return this.indexEpic;
     }
 }

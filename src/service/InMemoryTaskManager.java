@@ -13,6 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasksStorage;
     private final Map<Integer, Subtask> subtasksStorage;
     private final Map<Integer, Epic> epicsStorage;
+    private final TreeSet<Task> priorityTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int index;
     private final HistoryManager historyManager;
 
@@ -28,9 +29,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createNewTask(Task task) {
+        if (this.interSection(task)) {
+            System.out.println("Задачи пересекаются");
+            return null;
+        }
         if (task != null && !this.tasksStorage.containsKey(task.getId())) {
             task.setId(generateID());
             this.tasksStorage.put(task.getId(), task);
+            this.priorityTasks.add(task);
         } else {
             return null;
         }
@@ -41,11 +47,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask createNewSubtask(Subtask subtask) {
+        if (this.interSection(subtask)) {
+            System.out.println("Задачи пересекаются");
+            return null;
+        }
         if (subtask != null && !this.subtasksStorage.containsKey(subtask.getId())) {
             subtask.setId(generateID());
             this.subtasksStorage.put(this.index, subtask);
+            this.priorityTasks.add(subtask);
 
-            Epic epic = epicsStorage.get(subtask.getIndexEpic());
+            Epic epic = this.epicsStorage.get(subtask.getIndexEpic());
             if (epic != null) {
                 this.epicsStorage.get(subtask.getIndexEpic()).addSubtask(subtask.getId());
                 checkOrChangeEpicStatus(subtask.getIndexEpic());
@@ -75,35 +86,26 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     public void changeStatusSubtask(int index, Status status) {
-        subtasksStorage.get(index).setStatus(status);
-        checkOrChangeEpicStatus(subtasksStorage.get(index).getIndexEpic());
+        this.subtasksStorage.get(index).setStatus(status);
+        checkOrChangeEpicStatus(this.subtasksStorage.get(index).getIndexEpic());
     }
 
-    @Override
-    public List<Task> getPrioritizedTasks() {
-        List<Task> allTasks = new ArrayList<>();
-        allTasks.addAll(this.tasksStorage.values());
-        allTasks.addAll(this.subtasksStorage.values());
-        allTasks.addAll(this.epicsStorage.values());
-        allTasks.sort(Comparator.comparing(Task::getStartTime));
-        return allTasks;
-    }
 
     @Override
     public void removeAllTask() {
-        tasksStorage.forEach(((integer, task) -> historyManager.remove(task.getId())));
+        this.tasksStorage.forEach(((integer, task) -> this.historyManager.remove(task.getId())));
         this.tasksStorage.clear();
     }
 
     @Override
     public void removeAllSubtask() {
-        subtasksStorage.forEach((integer, subtask) -> historyManager.remove(subtask.getId()));
+        this.subtasksStorage.forEach((integer, subtask) -> this.historyManager.remove(subtask.getId()));
         this.subtasksStorage.clear();
-        for (Epic epic : epicsStorage.values()) {
+        for (Epic epic : this.epicsStorage.values()) {
             epic.setStatus(Status.NEW);
         }
         // удаление сабтаск у епика
-        for (Epic epic : epicsStorage.values()) {
+        for (Epic epic : this.epicsStorage.values()) {
             epic.getSubtasksIds().clear();
         }
 
@@ -111,11 +113,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpic() {
-        epicsStorage.forEach((integer, epic) -> historyManager.remove(epic.getId()));
-        for (Map.Entry<Integer, Epic> entry : epicsStorage.entrySet()) {
+        this.epicsStorage.forEach((integer, epic) -> this.historyManager.remove(epic.getId()));
+        for (Map.Entry<Integer, Epic> entry : this.epicsStorage.entrySet()) {
             List<Integer> subtasks = entry.getValue().getSubtasksIds();
             for (Integer subtask : subtasks) {
-                historyManager.remove(subtask);
+                this.historyManager.remove(subtask);
             }
         }
         this.epicsStorage.clear();
@@ -124,7 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getAllSubtaskByEpic(int epicIndex) {
-        if (epicsStorage.containsKey(epicIndex)) {
+        if (this.epicsStorage.containsKey(epicIndex)) {
             List<Subtask> allSubtasksByEpic = new ArrayList<>();
             List<Integer> subtasksByEpic = this.epicsStorage.get(epicIndex).getSubtasksIds();
             for (int subtasks : subtasksByEpic) {
@@ -153,10 +155,10 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int index) {
         try {
             Map<Integer, Task> allTasks = new HashMap<>();
-            allTasks.putAll(epicsStorage);
-            allTasks.putAll(subtasksStorage);
-            allTasks.putAll(tasksStorage);
-            historyManager.add(allTasks.get(index));
+            allTasks.putAll(this.epicsStorage);
+            allTasks.putAll(this.subtasksStorage);
+            allTasks.putAll(this.tasksStorage);
+            this.historyManager.add(allTasks.get(index));
             return allTasks.get(index);
         } catch (NullPointerException e) {
             System.out.println("Task not found");
@@ -166,9 +168,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int index) {
-        Task task = tasksStorage.get(index);
+        Task task = this.tasksStorage.get(index);
         if (task != null) {
-            historyManager.add(task);
+            this.historyManager.add(task);
             return task;
         } else {
             return null;
@@ -177,9 +179,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtask(int index) {
-        Subtask subtask = subtasksStorage.get(index);
+        Subtask subtask = this.subtasksStorage.get(index);
         if (subtask != null) {
-            historyManager.add(subtask);
+            this.historyManager.add(subtask);
             return subtask;
         } else {
             return null;
@@ -189,9 +191,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(int index) {
-        Epic epic = epicsStorage.get(index);
+        Epic epic = this.epicsStorage.get(index);
         if (epic != null) {
-            historyManager.add(epic);
+            this.historyManager.add(epic);
             return epic;
         } else {
             return null;
@@ -201,13 +203,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (task != null) {
-            tasksStorage.put(task.getId(), task);
+            this.tasksStorage.put(task.getId(), task);
         }
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        subtasksStorage.put(subtask.getId(), subtask);
+        this.subtasksStorage.put(subtask.getId(), subtask);
         setEpicTime(subtask.getIndexEpic());
         checkOrChangeEpicStatus(subtask.getIndexEpic());
 
@@ -215,64 +217,67 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        final Epic savedEpic = epicsStorage.get(epic.getId());
+        final Epic savedEpic = this.epicsStorage.get(epic.getId());
         savedEpic.setName(epic.getName());
         savedEpic.setDescription(epic.getDescription());
     }
 
     public List<Task> getHistory() {
-        return historyManager.getHistory();
+        return this.historyManager.getHistory();
     }
 
     @Override
     public void deleteSubtask(int index) {
-        if (subtasksStorage.containsKey(index)) {
-            historyManager.remove(index);
+        if (this.subtasksStorage.containsKey(index)) {
+            this.historyManager.remove(index);
             int indexEpic = this.subtasksStorage.get(index).getIndexEpic();
-            subtasksStorage.remove(index);
+            Subtask subTaskForRemove = this.subtasksStorage.remove(index);
+            this.priorityTasks.remove(subTaskForRemove);
             this.epicsStorage.get(indexEpic).removeOneSubtask(index);
             setEpicTime(indexEpic);
             checkOrChangeEpicStatus(indexEpic);
-        }else
-            System.out.printf("Сабтаска № %d отсутсвует \n",index);
+        } else
+            System.out.printf("Сабтаска № %d отсутсвует \n", index);
 
 
     }
 
     @Override
     public void deleteTask(int index) {
-        this.tasksStorage.remove(index);
-        historyManager.remove(index);
+        Task task = this.tasksStorage.remove(index);
+        this.priorityTasks.remove(task);
+        this.historyManager.remove(index);
+
     }
 
     @Override
     public void deleteEpic(int index) {
         ArrayList<Integer> subtasksForRemove = new ArrayList<>();
-        for (Subtask value : subtasksStorage.values()) {
+        for (Subtask value : this.subtasksStorage.values()) {
             if (value.getIndexEpic() == index) {
                 subtasksForRemove.add(value.getId());
             }
         }
         for (Integer id : subtasksForRemove) {
-            subtasksStorage.remove(id);
-            historyManager.remove(id);
+            this.subtasksStorage.remove(id);
+            this.historyManager.remove(id);
         }
-        historyManager.remove(index);
-        epicsStorage.remove(index);
+        this.historyManager.remove(index);
+        this.epicsStorage.remove(index);
     }
 
     private int generateID() {
-        return ++index;
+        return ++this.index;
     }
 
     private void checkOrChangeEpicStatus(int indexEpic) {
-        Epic epic = epicsStorage.get(indexEpic);
+        Epic epic = this.epicsStorage.get(indexEpic);
         List<Integer> subtasksIds = epic.getSubtasksIds();
         int countSubtasks = subtasksIds.size();
         int doneCount = 0;
         int newCount = 0;
         for (int subtasksId : subtasksIds) {
-            switch (subtasksStorage.get(subtasksId).getStatus()) {
+            switch (this.subtasksStorage.get(subtasksId).getStatus()) {
                 case NEW:
                     newCount++;
                     break;
@@ -295,51 +300,73 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void setEpicTime(int indexEpic) {
-        Epic epic = epicsStorage.get(indexEpic);
+        Epic epic = this.epicsStorage.get(indexEpic);
         List<Integer> subtasksIds = epic.getSubtasksIds();
-        if (epic.getSubtasksIds() == Collections.EMPTY_LIST){
-            Instant startTime = subtasksStorage.get(subtasksIds.get(0)).getStartTime();
-        Instant endTime = subtasksStorage.get(subtasksIds.get(0)).getEndTime();
-        for (Integer subtasksId : subtasksIds) {
-            if (subtasksStorage.get(subtasksId).getStartTime().isBefore(startTime))
-                startTime = subtasksStorage.get(subtasksId).getStartTime();
+        if (!subtasksIds.isEmpty()) {
+            Instant startTime = this.subtasksStorage.get(subtasksIds.get(0)).getStartTime();
+            Instant endTime = this.subtasksStorage.get(subtasksIds.get(0)).getEndTime();
+            for (Integer subtasksId : subtasksIds) {
+                if (this.subtasksStorage.get(subtasksId).getStartTime().isBefore(startTime))
+                    startTime = this.subtasksStorage.get(subtasksId).getStartTime();
 
-            if (subtasksStorage.get(subtasksId).getEndTime().isAfter(endTime))
-                endTime = subtasksStorage.get(subtasksId).getEndTime();
-        }
-        epic.setStartTime(startTime);
-        epic.setEndTime(endTime);
-        epic.setDuration(Duration.between(startTime, endTime).toMinutes());
-    } else {
+                if (this.subtasksStorage.get(subtasksId).getEndTime().isAfter(endTime))
+                    endTime = this.subtasksStorage.get(subtasksId).getEndTime();
+            }
+            epic.setStartTime(startTime);
+            epic.setEndTime(endTime);
+            epic.setDuration(Duration.between(startTime, endTime).toMinutes());
+        } else {
             epic.setStartTime(Instant.MIN);
             epic.setEndTime(Instant.MAX);
             epic.setDuration(0);
         }
 
-}
-
-    public Map<Integer, Task> getTasksStorage() {
-        return tasksStorage;
     }
 
-    public Map<Integer, Subtask> getSubtasksStorage() {
-        return subtasksStorage;
+    protected Map<Integer, Task> getTasksStorage() {
+        return this.tasksStorage;
     }
 
-    public Map<Integer, Epic> getEpicsStorage() {
-        return epicsStorage;
+    protected Map<Integer, Subtask> getSubtasksStorage() {
+        return this.subtasksStorage;
     }
 
+    protected Map<Integer, Epic> getEpicsStorage() {
+        return this.epicsStorage;
+    }
+    // Публичным должен быть только метод, который возвращает не сам HistoryManager, а коллекцию с историей просмотров
+    // Ответ: для этого у меня есть метод getHistory
+    // Этот метод мне нужен при выгрузки из файла
     public HistoryManager getHistoryManager() {
-        return historyManager;
+        return this.historyManager;
+    }
+    private HistoryManager historyManager(){
+        return this.historyManager;
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
     public void setIndex(int index) {
         this.index = index;
     }
+
+    @Override
+    public TreeSet<Task> getPriorityTasks() {
+        return this.priorityTasks;
+    }
+
+    @Override
+    public boolean interSection(Task newTask) {
+        for (Task oldTask : this.priorityTasks) {
+            if (!((newTask.getStartTime().isBefore(oldTask.getStartTime()) && newTask.getEndTime().isBefore(oldTask.getStartTime()))
+                    || (newTask.getStartTime().isAfter(oldTask.getStartTime()) && newTask.getEndTime().isAfter(oldTask.getStartTime())))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
 

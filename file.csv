@@ -1,2 +1,11 @@
 id,type,name,status,description,startTime,duration,epic
+1,TASK,Задача № 1,NEW,desc,1970-01-01T01:40:00Z,10,
+2,TASK,Задача № 2,NEW,Описание задачи №2,1970-01-01T01:56:40Z,10,
+3,EPIC,Эпик 1,NEW,Описание эпика 1,1970-01-01T02:13:20Z,28295303,
+6,EPIC,Эпик №2,NEW,Описание эпика №2,1970-01-01T02:46:40Z,30,
+4,SUBTASK,Subtask 1,NEW,descr 1,1970-01-01T02:13:20Z,10,3
+5,SUBTASK,Subtask 2,NEW,descr 2,1970-01-01T02:30:00Z,10,3
+7,SUBTASK,Subtask 3,NEW,descr 3,1970-01-01T02:46:40Z,30,6
+8,SUBTASK,Subtask 4,NEW,descr 3,2023-10-19T13:36:22.154946Z,60,3
 
+1,2,3

@@ -1,12 +1,11 @@
-import service.InMemoryTaskManager;
-import service.Managers;
+package service;
 
 class InMemoryTaskManagerTest extends TasksManagerTest<InMemoryTaskManager> {
 
     @Override
     public InMemoryTaskManager createManager() {
-        manager = Managers.getDefault();
-        return manager;
+        this.manager = Managers.getDefault();
+        return this.manager;
     }
 
 

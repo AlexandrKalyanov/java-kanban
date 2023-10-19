@@ -15,9 +15,6 @@ public interface TaskManager {
     void changeStatusTask(int index, Status status);
 
     void changeStatusSubtask(int index, Status status);
-
-    List<Task> getPrioritizedTasks();
-
     void removeAllTask();
 
     void removeAllSubtask();
@@ -57,6 +54,10 @@ public interface TaskManager {
 
     List<Task> getHistory();
     void setEpicTime(int indexEpic);
+
+    TreeSet<Task> getPriorityTasks();
+
+    boolean interSection(Task newTask);
 
 
 }

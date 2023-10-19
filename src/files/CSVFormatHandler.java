@@ -63,10 +63,10 @@ public class CSVFormatHandler {
         return new Subtask(Integer.parseInt(id),name,Status.valueOf(status),description,Instant.parse(startTime),Long.parseLong(duration),Integer.parseInt(epicId));
     }
 
-    public String historyToString(HistoryManager manager) {
+    public String historyToString(List<Task> tasks) {
         List<String> result = new ArrayList<>();
 
-        for (Task task : manager.getHistory()) {
+        for (Task task : tasks) {
             result.add(String.valueOf(task.getId()));
         }
         return String.join(DELIMITER, result);

@@ -14,10 +14,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         List<Task> result = new ArrayList<>();
-        if (first == null) {
+        if (this.first == null) {
             return result;
         }
-        Node current = first;
+        Node current = this.first;
 
         while (current != null) {
             result.add(current.getValue());
@@ -28,7 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (map.containsKey(task.getId())) {
+        if (this.map.containsKey(task.getId())) {
             remove(task.getId());
         }
         if (task == null) {
@@ -36,28 +36,28 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         Node node = new Node(task);
 
-        if (last != null) {
-            last.next = node;
-            node.prev = last;
+        if (this.last != null) {
+            this.last.next = node;
+            node.prev = this.last;
 
         } else {
-            first = node;
+            this.first = node;
 
         }
-        last = node;
-        map.put(task.getId(), node);
+        this.last = node;
+        this.map.put(task.getId(), node);
     }
 
     @Override
     public void remove(int id) {
-        Node current = map.remove(id);
-        if (current == last && current == first) {
-            last = null;
-            first = null;
-        } else if (current == last) {
-            last = current.prev;
-        } else if (current == first) {
-            first = current.next;
+        Node current = this.map.remove(id);
+        if (current == this.last && current == this.first) {
+            this.last = null;
+            this.first = null;
+        } else if (current == this.last) {
+            this.last = current.prev;
+        } else if (current == this.first) {
+            this.first = current.next;
         } else {
             current.prev.next = current.next;
             current.next.prev = current.prev;
@@ -77,11 +77,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public Task getValue() {
-            return value;
+            return this.value;
         }
 
         public Node getNext() {
-            return next;
+            return this.next;
         }
 
         public void setNext(Node next) {
@@ -89,7 +89,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public Node getPrev() {
-            return prev;
+            return this.prev;
         }
 
         public void setPrev(Node prev) {
