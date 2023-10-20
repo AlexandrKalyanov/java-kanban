@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasksStorage;
     private final Map<Integer, Subtask> subtasksStorage;
     private final Map<Integer, Epic> epicsStorage;
-    private final TreeSet<Task> priorityTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    private final Set<Task> priorityTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private int index;
     private final HistoryManager historyManager;
 
@@ -93,13 +93,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTask() {
-        this.tasksStorage.forEach(((integer, task) -> this.historyManager.remove(task.getId())));
+
+        this.tasksStorage.forEach((integer, task) -> {
+            this.historyManager.remove(task.getId());
+            this.priorityTasks.remove(task);
+        });
         this.tasksStorage.clear();
+
     }
 
     @Override
     public void removeAllSubtask() {
-        this.subtasksStorage.forEach((integer, subtask) -> this.historyManager.remove(subtask.getId()));
+        this.subtasksStorage.forEach((integer, subtask) -> {
+            this.historyManager.remove(subtask.getId());
+            this.priorityTasks.remove(subtask);
+        });
         this.subtasksStorage.clear();
         for (Epic epic : this.epicsStorage.values()) {
             epic.setStatus(Status.NEW);
@@ -113,15 +121,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpic() {
+        removeAllSubtask();
         this.epicsStorage.forEach((integer, epic) -> this.historyManager.remove(epic.getId()));
-        for (Map.Entry<Integer, Epic> entry : this.epicsStorage.entrySet()) {
-            List<Integer> subtasks = entry.getValue().getSubtasksIds();
-            for (Integer subtask : subtasks) {
-                this.historyManager.remove(subtask);
-            }
-        }
         this.epicsStorage.clear();
-        this.subtasksStorage.clear();
+
     }
 
     @Override
@@ -202,16 +205,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        if (task != null) {
+        if (task != null && !interSection(task)) {
+            Task deleteTask = this.tasksStorage.get(task.getId());
+            this.priorityTasks.remove(deleteTask);
             this.tasksStorage.put(task.getId(), task);
+            this.priorityTasks.add(task);
         }
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        this.subtasksStorage.put(subtask.getId(), subtask);
-        setEpicTime(subtask.getIndexEpic());
-        checkOrChangeEpicStatus(subtask.getIndexEpic());
+        if (subtask != null && !interSection(subtask)) {
+            Task deleteTask = this.tasksStorage.get(subtask.getId());
+            this.priorityTasks.remove(deleteTask);
+            this.subtasksStorage.put(subtask.getId(), subtask);
+            this.priorityTasks.add(subtask);
+            setEpicTime(subtask.getIndexEpic());
+            checkOrChangeEpicStatus(subtask.getIndexEpic());
+        }
 
     }
 
@@ -334,13 +345,12 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Epic> getEpicsStorage() {
         return this.epicsStorage;
     }
-    // Публичным должен быть только метод, который возвращает не сам HistoryManager, а коллекцию с историей просмотров
-    // Ответ: для этого у меня есть метод getHistory
-    // Этот метод мне нужен при выгрузки из файла
-    public HistoryManager getHistoryManager() {
+
+    protected HistoryManager getHistoryManager() {
         return this.historyManager;
     }
-    private HistoryManager historyManager(){
+
+    private HistoryManager historyManager() {
         return this.historyManager;
     }
 
@@ -353,12 +363,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPriorityTasks() {
-        return this.priorityTasks;
+    public List<Task> getPriorityTasks() {
+        return new ArrayList<>(priorityTasks);
     }
 
-    @Override
-    public boolean interSection(Task newTask) {
+
+    private boolean interSection(Task newTask) {
         for (Task oldTask : this.priorityTasks) {
             if (!((newTask.getStartTime().isBefore(oldTask.getStartTime()) && newTask.getEndTime().isBefore(oldTask.getStartTime()))
                     || (newTask.getStartTime().isAfter(oldTask.getStartTime()) && newTask.getEndTime().isAfter(oldTask.getStartTime())))) {

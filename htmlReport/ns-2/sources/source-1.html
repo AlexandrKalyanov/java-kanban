@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CSVFormatHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">files</a>
+</div>
+
+<h1>Coverage Summary for Class: CSVFormatHandler (files)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CSVFormatHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/47)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package files;
+&nbsp;
+&nbsp;import model.*;
+&nbsp;import service.HistoryManager;
+&nbsp;
+&nbsp;import java.time.Instant;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;public class CSVFormatHandler {</b>
+&nbsp;
+&nbsp;    private static final String DELIMITER = &quot;,&quot;;
+&nbsp;    public String toString(Task task) {
+<b class="nc">&nbsp;        String result = task.getId() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getTypeTask() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getName() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getStatus() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getDescription() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getStartTime() + DELIMITER +</b>
+<b class="nc">&nbsp;                task.getDuration() + DELIMITER;</b>
+<b class="nc">&nbsp;        if (task.getTypeTask() == TypeTask.SUBTASK) {</b>
+<b class="nc">&nbsp;            result += ((Subtask) task).getIndexEpic();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Task taskFromString(String value) {
+<b class="nc">&nbsp;        String[] parts = value.split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;        String id = String.valueOf(Integer.parseInt(parts[0]));</b>
+<b class="nc">&nbsp;        String name = parts[2];</b>
+<b class="nc">&nbsp;        String status = parts[3];</b>
+<b class="nc">&nbsp;        String description = parts[4];</b>
+<b class="nc">&nbsp;        String startTime = parts[5];</b>
+<b class="nc">&nbsp;        String duration = parts[6];</b>
+<b class="nc">&nbsp;        Task task = new Task(name,description,Status.valueOf(status),Integer.parseInt(id),Instant.parse(startTime),Long.parseLong(duration));</b>
+<b class="nc">&nbsp;        task.setId(Integer.parseInt(id));</b>
+<b class="nc">&nbsp;        return task;</b>
+&nbsp;    }
+&nbsp;     //todo
+&nbsp;    public Epic epicFromString(String value) {
+<b class="nc">&nbsp;        String[] parts = value.split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;        String id = String.valueOf(Integer.parseInt(parts[0]));</b>
+<b class="nc">&nbsp;        String typeTask = parts[1];</b>
+<b class="nc">&nbsp;        String name = parts[2];</b>
+<b class="nc">&nbsp;        String status = parts[3];</b>
+<b class="nc">&nbsp;        String description = parts[4];</b>
+<b class="nc">&nbsp;        String startTime = parts[5];</b>
+<b class="nc">&nbsp;        String duration = parts[6];</b>
+<b class="nc">&nbsp;        Epic epic = new Epic(name,description,TypeTask.valueOf(typeTask),Integer.parseInt(id),Instant.parse(startTime),Long.parseLong(duration),Instant.parse(startTime).plusSeconds(Long.parseLong(duration)*60));</b>
+<b class="nc">&nbsp;        epic.setStatus(Status.valueOf(status));</b>
+<b class="nc">&nbsp;        return epic;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Subtask subTaskFromString(String value) {
+<b class="nc">&nbsp;        String[] parts = value.split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;        String id = String.valueOf(Integer.parseInt(parts[0]));</b>
+<b class="nc">&nbsp;        String name = parts[2];</b>
+<b class="nc">&nbsp;        String status = parts[3];</b>
+<b class="nc">&nbsp;        String description = parts[4];</b>
+<b class="nc">&nbsp;        String startTime = parts[5];</b>
+<b class="nc">&nbsp;        String duration = parts[6];</b>
+<b class="nc">&nbsp;        String epicId = parts[7];</b>
+<b class="nc">&nbsp;        return new Subtask(Integer.parseInt(id),name,Status.valueOf(status),description,Instant.parse(startTime),Long.parseLong(duration),Integer.parseInt(epicId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String historyToString(HistoryManager manager) {
+<b class="nc">&nbsp;        List&lt;String&gt; result = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Task task : manager.getHistory()) {</b>
+<b class="nc">&nbsp;            result.add(String.valueOf(task.getId()));</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return String.join(DELIMITER, result);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getHeader() {
+<b class="nc">&nbsp;        return &quot;id,type,name,status,description,startTime,duration,epic&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-17 15:36</div>
+</div>
+</body>
+</html>

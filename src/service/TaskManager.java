@@ -55,11 +55,7 @@ public interface TaskManager {
     List<Task> getHistory();
     void setEpicTime(int indexEpic);
 
-    TreeSet<Task> getPriorityTasks();
-
-    boolean interSection(Task newTask);
-
-
+    List<Task> getPriorityTasks();
 }
 
 

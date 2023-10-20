@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Task</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">model</a>
+</div>
+
+<h1>Coverage Summary for Class: Task (model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Task</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    52,9%
+  </span>
+  <span class="absValue">
+    (9/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45,5%
+  </span>
+  <span class="absValue">
+    (15/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package model;
+&nbsp;
+&nbsp;
+&nbsp;import java.time.Instant;
+&nbsp;
+&nbsp;public class Task {
+&nbsp;    protected String name;
+&nbsp;    protected String description;
+&nbsp;    protected int id;
+&nbsp;    protected TypeTask typeTask;
+&nbsp;    protected Status status;
+&nbsp;    protected Instant startTime;
+&nbsp;    protected long duration;
+&nbsp;
+&nbsp;
+&nbsp;    public Task(String name,
+&nbsp;                String description,
+&nbsp;                Instant startTime,
+<b class="fc">&nbsp;                long duration) {</b>
+&nbsp;
+<b class="fc">&nbsp;        this.name = name;</b>
+<b class="fc">&nbsp;        this.description = description;</b>
+<b class="fc">&nbsp;        this.typeTask = TypeTask.TASK;</b>
+<b class="fc">&nbsp;        this.status = Status.NEW;</b>
+<b class="fc">&nbsp;        this.startTime = startTime;</b>
+<b class="fc">&nbsp;        this.duration = duration;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;    public Task(String name,
+&nbsp;                String description,
+&nbsp;                Status status,
+&nbsp;                int id,
+&nbsp;                Instant startTime,
+<b class="nc">&nbsp;                long duration) {</b>
+&nbsp;
+<b class="nc">&nbsp;        this.name = name;</b>
+<b class="nc">&nbsp;        this.description = description;</b>
+<b class="nc">&nbsp;        this.status = status;</b>
+<b class="nc">&nbsp;        this.id = id;</b>
+<b class="nc">&nbsp;        this.typeTask = TypeTask.TASK;</b>
+<b class="nc">&nbsp;        this.startTime = startTime;</b>
+<b class="nc">&nbsp;        this.duration = duration;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setName(String name) {
+<b class="fc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDescription() {
+<b class="nc">&nbsp;        return description;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDescription(String description) {
+<b class="nc">&nbsp;        this.description = description;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Status getStatus() {
+<b class="fc">&nbsp;        return status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStatus(Status status) {
+<b class="fc">&nbsp;        this.status = status;</b>
+&nbsp;    }
+&nbsp;    public void setId(int id) {
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public TypeTask getTypeTask() {
+<b class="nc">&nbsp;        return typeTask;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Instant getStartTime() {
+<b class="fc">&nbsp;        return startTime;</b>
+&nbsp;    }
+&nbsp;    public long getDuration() {
+<b class="nc">&nbsp;        return duration;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStartTime(Instant startTime) {
+<b class="fc">&nbsp;        this.startTime = startTime;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDuration(long duration) {
+<b class="fc">&nbsp;        this.duration = duration;</b>
+&nbsp;    }
+&nbsp;    public Instant getEndTime(){
+<b class="nc">&nbsp;        return this.startTime.plusSeconds(duration * 60);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return String.format(&quot;Task %d: %s, %s. (%s) \n &quot; +</b>
+&nbsp;                        &quot;Начать: %s \n &quot; +
+&nbsp;                        &quot;Время на выполнение: %s \n &quot; +
+<b class="nc">&nbsp;                        &quot;Закончить: %s&quot;, id,</b>
+&nbsp;                name,
+&nbsp;                description,
+&nbsp;                status,
+&nbsp;                startTime,
+<b class="nc">&nbsp;                duration,</b>
+<b class="nc">&nbsp;                getEndTime());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-17 15:36</div>
+</div>
+</body>
+</html>

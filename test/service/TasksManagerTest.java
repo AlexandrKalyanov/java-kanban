@@ -38,10 +38,10 @@ public abstract class TasksManagerTest<T extends TaskManager> {
     public void createNewTaskTest() {
         Task task = addTask();
         this.manager.createNewTask(task);
-        TreeSet<Task> tasks = this.manager.getPriorityTasks();
+        List<Task> tasks = this.manager.getPriorityTasks();
         assertNotNull(task.getStatus());
         assertEquals(Status.NEW, task.getStatus());
-        assertEquals(Set.of(task), tasks);
+        assertEquals(List.of(task), tasks);
     }
 
     @Test
@@ -240,7 +240,8 @@ public abstract class TasksManagerTest<T extends TaskManager> {
         TreeSet<Task> set = new TreeSet<>(Comparator.comparing(Task::getStartTime));
         set.add(this.manager.getTask(1));
         set.add(this.manager.getSubtask(3));
-        assertEquals(set, this.manager.getPriorityTasks());
+        List<Task> list = new ArrayList<>(set);
+        assertEquals(list, this.manager.getPriorityTasks());
 
     }
 

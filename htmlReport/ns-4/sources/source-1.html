@@ -1,0 +1,401 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileBackedTasksManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: FileBackedTasksManager (service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileBackedTasksManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/150)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service;
+&nbsp;
+&nbsp;import files.CSVFormatHandler;
+&nbsp;
+&nbsp;import model.*;
+&nbsp;
+&nbsp;import java.io.*;
+&nbsp;import java.time.Instant;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;
+&nbsp;public class FileBackedTasksManager extends InMemoryTaskManager {
+&nbsp;    private final File file;
+<b class="nc">&nbsp;    private static final CSVFormatHandler handler = new CSVFormatHandler();</b>
+&nbsp;
+<b class="nc">&nbsp;    public FileBackedTasksManager() {</b>
+<b class="nc">&nbsp;        this.file = new File(&quot;file.csv&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager();</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewTask(new Task(&quot;Задача №1&quot;,&quot;desc&quot;,Instant.ofEpochSecond(1111111117L),60));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewTask(new Task(&quot;Задача № 2&quot;,&quot;Описание задачи №2&quot;,Instant.ofEpochSecond(1111111116L),30));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewEpic(new Epic(&quot;Эпик 1&quot;, &quot;Описание эпика 1&quot;, TypeTask.EPIC));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewSubtask(new Subtask(&quot;Subtask 1&quot;, &quot;descr 1&quot;,Instant.ofEpochSecond(1111111115L),60,3));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewSubtask(new Subtask(&quot;Subtask 2&quot;, &quot;descr 2&quot;,Instant.ofEpochSecond(1111111114L),60,3));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewEpic(new Epic(&quot;Эпик №2&quot;, &quot;Описание эпика №2&quot;, TypeTask.EPIC));</b>
+<b class="nc">&nbsp;        backedTasksManager.createNewSubtask(new Subtask(&quot;Subtask 3&quot;, &quot;descr 3&quot;,Instant.ofEpochSecond(1111111113L),60,6));</b>
+<b class="nc">&nbsp;        backedTasksManager.getTask(-1);</b>
+<b class="nc">&nbsp;        backedTasksManager.getTask(10);</b>
+<b class="nc">&nbsp;        backedTasksManager.getTask(1);</b>
+<b class="nc">&nbsp;        backedTasksManager.getTask(2);</b>
+<b class="nc">&nbsp;        backedTasksManager.getEpic(3);</b>
+&nbsp;
+<b class="nc">&nbsp;        FileBackedTasksManager backedTasksManager1 = backedTasksManager.loadFromFile();</b>
+<b class="nc">&nbsp;        System.out.println(backedTasksManager1.getPrioritizedTasks());</b>
+<b class="nc">&nbsp;        System.out.println(backedTasksManager1.getPrioritizedTasks().size());</b>
+&nbsp;       // System.out.println(backedTasksManager1.getHistory());
+&nbsp;        //backedTasksManager1.createNewSubtask(new Subtask(&quot;Subtask 4&quot;, &quot;descr 3&quot;,Instant.now(),60,3));
+&nbsp;       // backedTasksManager1.getSubtask(8);
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void save() {
+<b class="nc">&nbsp;        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.file.getName()))) {</b>
+&nbsp;
+<b class="nc">&nbsp;            writer.write(handler.getHeader());</b>
+<b class="nc">&nbsp;            writer.newLine();</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Task task : getTasksStorage().values()) {</b>
+<b class="nc">&nbsp;                writer.write(handler.toString(task));</b>
+<b class="nc">&nbsp;                writer.newLine();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Epic epic : getEpicsStorage().values()) {</b>
+<b class="nc">&nbsp;                writer.write(handler.toString(epic));</b>
+<b class="nc">&nbsp;                writer.newLine();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Subtask subTask : getSubtasksStorage().values()) {</b>
+<b class="nc">&nbsp;                writer.write(handler.toString(subTask));</b>
+<b class="nc">&nbsp;                writer.newLine();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+<b class="nc">&nbsp;            writer.newLine();</b>
+<b class="nc">&nbsp;            writer.write(handler.historyToString(getHistoryManager()));</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (IOException exception) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Невозможно прочитать файл!&quot;);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public FileBackedTasksManager loadFromFile() {
+<b class="nc">&nbsp;        FileBackedTasksManager manager = new FileBackedTasksManager();</b>
+<b class="nc">&nbsp;        ArrayList&lt;String&gt; lines = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            BufferedReader reader = new BufferedReader(new FileReader(&quot;file.csv&quot;));</b>
+<b class="nc">&nbsp;            String content = reader.readLine();</b>
+<b class="nc">&nbsp;            while (reader.ready()) {</b>
+<b class="nc">&nbsp;                lines.add(content);</b>
+<b class="nc">&nbsp;                content = reader.readLine();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            reader.close();</b>
+<b class="nc">&nbsp;            lines.add(content);</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            int maxId = 0;</b>
+<b class="nc">&nbsp;            for (int i = 1; i &lt; (lines.size() - 2); i++) {</b>
+<b class="nc">&nbsp;                String[] parts = lines.get(i).split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;                if (parts[1].equals(&quot;TASK&quot;)) {</b>
+<b class="nc">&nbsp;                    Task task = handler.taskFromString(lines.get(i));</b>
+<b class="nc">&nbsp;                    manager.getTasksStorage().put(task.getId(), task);</b>
+<b class="nc">&nbsp;                    if (maxId &lt; task.getId()) {</b>
+<b class="nc">&nbsp;                        maxId = task.getId();</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                if (parts[1].equals(&quot;EPIC&quot;)) {</b>
+<b class="nc">&nbsp;                    Epic epic = handler.epicFromString(lines.get(i));</b>
+<b class="nc">&nbsp;                    manager.getEpicsStorage().put(epic.getId(), epic);</b>
+<b class="nc">&nbsp;                    if (maxId &lt; epic.getId()) {</b>
+<b class="nc">&nbsp;                        maxId = epic.getId();</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                if (parts[1].equals(&quot;SUBTASK&quot;)) {</b>
+<b class="nc">&nbsp;                    Subtask subTask = handler.subTaskFromString(lines.get(i));</b>
+<b class="nc">&nbsp;                    int ide = subTask.getIndexEpic();</b>
+<b class="nc">&nbsp;                    manager.getSubtasksStorage().put(subTask.getId(), subTask);</b>
+<b class="nc">&nbsp;                    if (manager.getEpicsStorage().containsKey(ide)) {</b>
+<b class="nc">&nbsp;                        Epic epic = manager.getEpicsStorage().get(ide);</b>
+<b class="nc">&nbsp;                        epic.addSubtask(subTask.getId());</b>
+<b class="nc">&nbsp;                        if (maxId &lt; epic.getId()) {</b>
+<b class="nc">&nbsp;                            maxId = epic.getId();</b>
+&nbsp;                        }
+<b class="nc">&nbsp;                    } else {</b>
+<b class="nc">&nbsp;                        System.out.println(&quot;Файл повреждён! Не возможно найти Эпик!&quot;);</b>
+<b class="nc">&nbsp;                        break;</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            manager.setIndex(maxId + 1);</b>
+<b class="nc">&nbsp;            int lineWithHistory = lines.size() - 1;</b>
+<b class="nc">&nbsp;            String[] ids = lines.get(lineWithHistory).split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;            boolean checkHistory = lines.get(lineWithHistory).isEmpty();</b>
+<b class="nc">&nbsp;            if (!checkHistory) {</b>
+<b class="nc">&nbsp;                for (String id : ids) {</b>
+<b class="nc">&nbsp;                    if (manager.getTasksStorage().containsKey(Integer.parseInt(id))) {</b>
+<b class="nc">&nbsp;                        manager.getHistoryManager().add(manager.getTasksStorage().get(Integer.parseInt(id)));</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (manager.getEpicsStorage().containsKey(Integer.parseInt(id))) {</b>
+<b class="nc">&nbsp;                        manager.getHistoryManager().add(manager.getEpicsStorage().get(Integer.parseInt(id)));</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (manager.getSubtasksStorage().containsKey(Integer.parseInt(id))) {</b>
+<b class="nc">&nbsp;                        manager.getHistoryManager().add(manager.getSubtasksStorage().get(Integer.parseInt(id)));</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            return manager;</b>
+<b class="nc">&nbsp;        } catch (IndexOutOfBoundsException | NullPointerException e) {</b>
+<b class="nc">&nbsp;            return manager;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Task createNewTask(Task task) {
+<b class="nc">&nbsp;        super.createNewTask(task);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return task;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Subtask createNewSubtask(Subtask subtask) {
+<b class="nc">&nbsp;        super.createNewSubtask(subtask);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return subtask;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Epic createNewEpic(Epic epic) {
+<b class="nc">&nbsp;        super.createNewEpic(epic);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return epic;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void changeStatusTask(int index, Status status) {
+<b class="nc">&nbsp;        super.changeStatusTask(index, status);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void changeStatusSubtask(int index, Status status) {
+<b class="nc">&nbsp;        super.changeStatusSubtask(index, status);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Task&gt; getPrioritizedTasks() {
+<b class="nc">&nbsp;        List&lt;Task&gt; tasks = super.getPrioritizedTasks();</b>
+<b class="nc">&nbsp;        tasks.sort(Comparator.comparing(Task::getStartTime));</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return tasks;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void removeAllTask() {
+<b class="nc">&nbsp;        super.removeAllTask();</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void removeAllSubtask() {
+<b class="nc">&nbsp;        super.removeAllSubtask();</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void removeAllEpic() {
+<b class="nc">&nbsp;        super.removeAllEpic();</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Subtask&gt; getAllSubtaskByEpic(int epicIndex) {
+<b class="nc">&nbsp;        List&lt;Subtask&gt; subtasks = super.getAllSubtaskByEpic(epicIndex);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return subtasks;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Task&gt; getTasks() {
+<b class="nc">&nbsp;        List&lt;Task&gt; tasks = super.getTasks();</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return tasks;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Subtask&gt; getSubtasks() {
+<b class="nc">&nbsp;        List&lt;Subtask&gt; subtasks = super.getSubtasks();</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return subtasks;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Epic&gt; getEpics() {
+<b class="nc">&nbsp;        List&lt;Epic&gt; epics = super.getEpics();</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return epics;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Task getTaskById(int index) {
+<b class="nc">&nbsp;        Task task = super.getTaskById(index);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return task;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Task getTask(int index) {
+<b class="nc">&nbsp;        Task task = super.getTask(index);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return task;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Subtask getSubtask(int index) {
+<b class="nc">&nbsp;        Subtask subtask = super.getSubtask(index);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return subtask;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Epic getEpic(int index) {
+<b class="nc">&nbsp;        Epic epic = super.getEpic(index);</b>
+<b class="nc">&nbsp;        save();</b>
+<b class="nc">&nbsp;        return epic;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void updateTask(Task task) {
+<b class="nc">&nbsp;        super.updateTask(task);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void updateSubtask(Subtask subtask) {
+<b class="nc">&nbsp;        super.updateSubtask(subtask);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void updateEpic(Epic epic) {
+<b class="nc">&nbsp;        super.updateEpic(epic);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteSubtask(int index) {
+<b class="nc">&nbsp;        super.deleteSubtask(index);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteTask(int index) {
+<b class="nc">&nbsp;        super.deleteTask(index);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteEpic(int index) {
+<b class="nc">&nbsp;        super.deleteEpic(index);</b>
+<b class="nc">&nbsp;        save();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-17 15:36</div>
+</div>
+</body>
+</html>

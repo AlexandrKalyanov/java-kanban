@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TaskManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: TaskManager (service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TaskManager</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service;
+&nbsp;
+&nbsp;import model.*;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;public interface TaskManager {
+&nbsp;    Task createNewTask(Task task); //done
+&nbsp;
+&nbsp;    Subtask createNewSubtask(Subtask subtask); //done
+&nbsp;
+&nbsp;    Epic createNewEpic(Epic epic); //done
+&nbsp;
+&nbsp;
+&nbsp;    void changeStatusTask(int index, Status status); //done
+&nbsp;
+&nbsp;    void changeStatusSubtask(int index, Status status); //done
+&nbsp;
+&nbsp;    List&lt;Task&gt; getPrioritizedTasks(); //done
+&nbsp;
+&nbsp;    void removeAllTask(); //done
+&nbsp;
+&nbsp;    void removeAllSubtask(); //done
+&nbsp;
+&nbsp;    void removeAllEpic(); //done
+&nbsp;
+&nbsp;    List&lt;Subtask&gt; getAllSubtaskByEpic(int epicIndex); //done
+&nbsp;
+&nbsp;    List&lt;Task&gt; getTasks();
+&nbsp;
+&nbsp;    List&lt;Subtask&gt; getSubtasks();
+&nbsp;
+&nbsp;    List&lt;Epic&gt; getEpics();
+&nbsp;
+&nbsp;    Task getTaskById(int index);
+&nbsp;
+&nbsp;    Task getTask(int index); //done
+&nbsp;
+&nbsp;    Subtask getSubtask(int index); //done
+&nbsp;
+&nbsp;    Epic getEpic(int index); //done
+&nbsp;
+&nbsp;    void updateTask(Task task); //done
+&nbsp;
+&nbsp;    void updateSubtask(Subtask subtask);//done
+&nbsp;
+&nbsp;    void updateEpic(Epic epic);//done
+&nbsp;
+&nbsp;
+&nbsp;    void deleteSubtask(int index);//done
+&nbsp;
+&nbsp;
+&nbsp;    void deleteTask(int index);//done
+&nbsp;
+&nbsp;
+&nbsp;    void deleteEpic(int index);
+&nbsp;
+&nbsp;    List&lt;Task&gt; getHistory();
+&nbsp;    void setEpicTime(int indexEpic);
+&nbsp;
+&nbsp;
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-17 15:36</div>
+</div>
+</body>
+</html>
