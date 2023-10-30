@@ -15,6 +15,7 @@ public interface TaskManager {
     void changeStatusTask(int index, Status status);
 
     void changeStatusSubtask(int index, Status status);
+
     void removeAllTask();
 
     void removeAllSubtask();
@@ -53,6 +54,7 @@ public interface TaskManager {
     void deleteEpic(int index);
 
     List<Task> getHistory();
+
     void setEpicTime(int indexEpic);
 
     List<Task> getPriorityTasks();

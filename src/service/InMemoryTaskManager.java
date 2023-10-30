@@ -18,11 +18,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager;
 
 
-    public InMemoryTaskManager() {
+    public InMemoryTaskManager(HistoryManager historyManager) {
         this.tasksStorage = new HashMap<>();
         this.subtasksStorage = new HashMap<>();
         this.epicsStorage = new HashMap<>();
-        this.historyManager = Managers.getHistoryDefault();
+        this.historyManager = historyManager;
 
     }
 

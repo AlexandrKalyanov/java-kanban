@@ -1,12 +1,14 @@
 package service;
 
 import files.CSVFormatHandler;
-
-import model.*;
+import model.Epic;
+import model.Status;
+import model.Subtask;
+import model.Task;
 
 import java.io.*;
-import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -14,42 +16,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private static final CSVFormatHandler handler = new CSVFormatHandler();
 
     public FileBackedTasksManager() {
+        super(Managers.getHistoryDefault());
         this.file = new File("file.csv");
     }
 
     public FileBackedTasksManager(File file) {
+        super(Managers.getHistoryDefault());
         this.file = file;
     }
 
-    public static void main(String[] args) {
-        FileBackedTasksManager backedTasksManager = Managers.BackedTasksManager(new File("file.csv"));
-        backedTasksManager.createNewTask(new Task("Задача № 1", "desc", Instant.ofEpochSecond(6000L), 10));
-        backedTasksManager.createNewTask(new Task("Задача № 2", "Описание задачи №2", Instant.ofEpochSecond(7000L), 10));
-        backedTasksManager.createNewEpic(new Epic("Эпик 1", "Описание эпика 1", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 1", "descr 1", Instant.ofEpochSecond(8000L), 10, 3));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 2", "descr 2", Instant.ofEpochSecond(9000), 10, 3));
-        backedTasksManager.createNewEpic(new Epic("Эпик №2", "Описание эпика №2", TypeTask.EPIC));
-        backedTasksManager.createNewSubtask(new Subtask("Subtask 3", "descr 3", Instant.ofEpochSecond(10000L), 30, 6));
-        backedTasksManager.getTask(1);
-        backedTasksManager.getTask(2);
-        backedTasksManager.getEpic(3);
-        System.out.println(backedTasksManager.getHistory());
-        for (Task priorityTask : backedTasksManager.getPriorityTasks()) {
-            System.out.println(" ");
-            System.out.println(priorityTask);
-        }
-        FileBackedTasksManager backedTasksManager1 = loadFromFile(new File("file.csv"));
-        System.out.println(backedTasksManager1.getPriorityTasks().size());
-        System.out.println(backedTasksManager1.getHistory());
-        backedTasksManager1.createNewSubtask(new Subtask("Subtask 4", "descr 3", Instant.now(), 60, 3));
-        for (Task priorityTask : backedTasksManager1.getPriorityTasks()) {
-            System.out.println(" ");
-            System.out.println(priorityTask);
-            System.out.println(" ");
-        }
-    }
-
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.file.getName()))) {
 
             writer.write(handler.getHeader());

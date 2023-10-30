@@ -4,12 +4,11 @@ import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TasksManagerTest<T extends TaskManager> {
     protected T manager;
@@ -444,7 +443,6 @@ public abstract class TasksManagerTest<T extends TaskManager> {
         this.manager.createNewTask(task2);
         this.manager.getTask(1);
         this.manager.getTask(2);
-        this.manager.getTask(3);
         this.manager.getTask(3);
         assertEquals(List.of(task, task1, task2), this.manager.getHistory());
 

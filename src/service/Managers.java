@@ -1,15 +1,18 @@
 package service;
 
+import servers.KVTaskClient;
+
 import java.io.File;
 
 public final class Managers {
 
     private Managers() {
     }
-
-
-    public static InMemoryTaskManager getDefault() {
-        return new InMemoryTaskManager();
+    public static TaskManager getDefault(String url) {
+        return new HttpTaskManager(url, new KVTaskClient(url));
+    }
+    public static InMemoryTaskManager getInMemoryTaskManager(){
+        return new InMemoryTaskManager(getHistoryDefault());
     }
 
     public static HistoryManager getHistoryDefault() {

@@ -4,6 +4,18 @@
     <JAVADOC />
     <SOURCES>
       <root url="file://$USER_HOME$/Downloads/m1-t25-api-master/src" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/examples/android-proguard-example/src" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/extras/src/main/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/extras/src/test/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/graal-native-image-test/src/test/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/gson/src/main/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/gson/src/main/java-templates" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/gson/src/test/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/metrics/src/main/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/proto/src/main/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/proto/src/test/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/shrinker-test/src/main/java" />
+      <root url="file://$USER_HOME$/Downloads/gson-main/shrinker-test/src/test/java" />
     </SOURCES>
   </library>
 </component>

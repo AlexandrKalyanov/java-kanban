@@ -109,6 +109,10 @@ public class Task {
                 this.duration,
                 getEndTime());
     }
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s",
+                id, typeTask, name, status, description, startTime, duration, "");
+    }
 
     @Override
     public boolean equals(Object o) {
