@@ -49,8 +49,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             writer.newLine();
             if (handler.historyToString(getHistory()).isEmpty()) {
                 writer.newLine();
-            } else
-                writer.write(handler.historyToString(getHistory()));
+            } else writer.write(handler.historyToString(getHistory()));
 
         } catch (IOException exception) {
             throw new IllegalArgumentException("Невозможно прочитать файл!");
@@ -98,12 +97,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     int ide = subTask.getIndexEpic();
                     manager.getSubtasksStorage().put(subTask.getId(), subTask);
                     manager.getPriorityTasks().add(subTask);
+                    if (maxId < subTask.getId()) {
+                        maxId = subTask.getId();
+                    }
                     if (manager.getEpicsStorage().containsKey(ide)) {
                         Epic epic = manager.getEpicsStorage().get(ide);
                         epic.addSubtask(subTask.getId());
-                        if (maxId < epic.getId()) {
-                            maxId = epic.getId();
-                        }
                     } else {
                         System.out.println("Файл повреждён! Не возможно найти Эпик!");
                         break;

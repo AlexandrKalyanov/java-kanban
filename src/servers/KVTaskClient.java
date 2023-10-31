@@ -1,5 +1,7 @@
 package servers;
 
+import exceptions.ManagerSaveException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -22,8 +24,12 @@ public class KVTaskClient {
         HttpClient client = HttpClient.newHttpClient();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                throw new ManagerSaveException("Don't register client. Status code is: " + statusCode);
+            }
         } catch (IOException | InterruptedException e) {
-            System.out.println("There is a problem\n" +
+            throw new ManagerSaveException("There is a problem\n" +
                     "Check the address and try again");
         }
         apiToken = response.body();
@@ -40,8 +46,12 @@ public class KVTaskClient {
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                throw new ManagerSaveException("Don't register client. Status code is: " + statusCode);
+            }
         } catch (IOException | InterruptedException e) {
-            System.out.println("ERROR" + e.getMessage());
+            throw new ManagerSaveException("Don't register client");
         }
     }
 
@@ -55,13 +65,14 @@ public class KVTaskClient {
         HttpClient client = HttpClient.newHttpClient();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
-                return "Something went wrong. Status code is: " + response.statusCode();
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                throw new ManagerSaveException("Something went wrong. Status code is: " + statusCode);
             }
             return response.body();
         } catch (IOException | InterruptedException e) {
-            return "There is a problem\n" +
-                    "Check the address and try again";
+            throw new ManagerSaveException("There is a problem\n" +
+                    "Check the address and try again");
         }
     }
 }

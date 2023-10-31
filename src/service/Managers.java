@@ -8,17 +8,20 @@ public final class Managers {
 
     private Managers() {
     }
+
     public static TaskManager getDefault(String url) {
-        return new HttpTaskManager(url, new KVTaskClient(url));
+        return new HttpTaskManager(new KVTaskClient(url));
     }
-    public static InMemoryTaskManager getInMemoryTaskManager(){
+
+    public static InMemoryTaskManager getInMemoryTaskManager() {
         return new InMemoryTaskManager(getHistoryDefault());
     }
 
     public static HistoryManager getHistoryDefault() {
         return new InMemoryHistoryManager();
     }
-    public static FileBackedTasksManager BackedTasksManager(File file){
+
+    public static FileBackedTasksManager BackedTasksManager(File file) {
         return new FileBackedTasksManager(file);
     }
 }

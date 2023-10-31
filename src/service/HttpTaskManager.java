@@ -9,7 +9,6 @@ import model.Subtask;
 import model.Task;
 import servers.KVTaskClient;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +16,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final KVTaskClient taskClient;
     private static final Gson gson = new Gson();
 
-    public HttpTaskManager(String url, KVTaskClient taskClient) {
-        super(new File(url));
+    public HttpTaskManager(KVTaskClient taskClient) {
         this.taskClient = taskClient;
     }
 
@@ -45,6 +43,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private void loadTasks(String key) {
         JsonElement jsonElement = JsonParser.parseString(taskClient.load(key));
         JsonArray jsonTasksArray = jsonElement.getAsJsonArray();
+        int maxId = 0;
         for (JsonElement element : jsonTasksArray) {
             Task task;
             Epic epic;
@@ -52,21 +51,43 @@ public class HttpTaskManager extends FileBackedTasksManager {
             switch (key) {
                 case "task":
                     task = gson.fromJson(element.getAsJsonObject(), Task.class);
-                    createNewTask(task);
+                    getTasksStorage().put(task.getId(), task);
+                    getPriorityTasks().add(task);
+                    if (maxId < task.getId()) {
+                        maxId = task.getId();
+                    }
                     break;
                 case "subtask":
                     subtask = gson.fromJson(element.getAsJsonObject(), Subtask.class);
-                    createNewSubtask(subtask);
-                    break;
+                    int ide = subtask.getIndexEpic();
+                    getSubtasksStorage().put(subtask.getId(), subtask);
+                    getPriorityTasks().add(subtask);
+                    if (maxId < subtask.getId()) {
+                        maxId = subtask.getId();
+                    }
+                    if (getEpicsStorage().containsKey(ide)) {
+                        Epic epicWithSubtask = getEpicsStorage().get(ide);
+                        epicWithSubtask.addSubtask(subtask.getId());
+                    } else {
+                        System.out.println("The file is corrupted! It is not possible to find an Epic!");
+                        break;
+                    }
+
                 case "epic":
                     epic = gson.fromJson(element.getAsJsonObject(), Epic.class);
-                    createNewEpic(epic);
+                    getEpicsStorage().put(epic.getId(), epic);
+                    getPriorityTasks().add(epic);
+                    if (maxId < epic.getId()) {
+                        maxId = epic.getId();
+                    }
                     break;
                 default:
                     System.out.println("Unable to upload tasks");
                     return;
             }
+
         }
+        setIndex(maxId + 1);
     }
 
     private void loadHistory() {
